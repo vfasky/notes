@@ -20,6 +20,8 @@
   },
   "homepage": "https://github.com/vfasky/notes",
   "dependencies": {
-    "koa": "^0.13.0"
+    "koa": "^0.13.0",
+    "koa-memcached": "^0.1.2",
+    "koa-generic-session": "^1.3.0"
   }
 }

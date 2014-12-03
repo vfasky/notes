@@ -6,7 +6,7 @@ var app = koa();
 
 app.use(function *(){
   this.body = {
-  	test: 'ok?'
+    test: 'ok?'
   };
 });
 

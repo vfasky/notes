@@ -5,6 +5,9 @@ var koa = require('koa');
 
 var session = require('koa-generic-session');
 var memcachedStore = require('koa-memcached');
+var config = require('./config');
+
+console.log(config);
 
 var app = module.exports = koa();
 

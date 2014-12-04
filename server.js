@@ -35,9 +35,9 @@ app.use(session({
  * 加载模板引擎
  */
 template(app, {
-	templatePath: config.templatePath
+  templatePath: config.templatePath
 });
 
 if (!module.parent) {
-	app.listen(port);
+  app.listen(port);
 }

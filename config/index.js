@@ -2,7 +2,7 @@
  * 配置
  * @module config
  * @author vfasky <vfasky@gmail.com>
- */	
+ */
 
 "use strict";
 
@@ -15,7 +15,7 @@ var _ = require('lodash');
  * @type {Object}
  */
 var defaultConfig = JSON.parse(fs.readFileSync(
-	path.join(__dirname, 'default.json')
+    path.join(__dirname, 'default.json')
 ), 'utf8');
 
 /**
@@ -24,8 +24,8 @@ var defaultConfig = JSON.parse(fs.readFileSync(
  */
 var userConfig = {};
 var configPath = path.join(__dirname, 'user.json');
-if( fs.existsSync(configPath) ){
-	userConfig = JSON.parse(fs.readFileSync(configPath), 'utf8');	
+if (fs.existsSync(configPath)) {
+    userConfig = JSON.parse(fs.readFileSync(configPath), 'utf8');
 }
 
 /**
@@ -33,8 +33,8 @@ if( fs.existsSync(configPath) ){
  * @type {Object}
  */
 var config = _.extend(
-	defaultConfig,
-	userConfig
+    defaultConfig,
+    userConfig
 );
 
 /**

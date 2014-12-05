@@ -28,16 +28,16 @@ app.keys = config.keys;
  * 定义 session store
  */
 app.use(session({
-  store: memcachedStore()
+    store: memcachedStore()
 }));
 
 /**
  * 加载模板引擎
  */
 template(app, {
-  templatePath: config.templatePath
+    templatePath: config.templatePath
 });
 
 if (!module.parent) {
-  app.listen(port);
+    app.listen(port);
 }

@@ -1,7 +1,10 @@
 {
-	"//": "设置一个签名 Cookie 的密钥",
-	"keys": ["im a newer secret", "i like turtle"],
+    "//": "设置一个签名 Cookie 的密钥",
+    "keys": ["im a newer secret", "i like turtle"],
 
-	"//": "模板路径",
-	"templatePath": "app/view"
+    "//": "mongodb",
+    "mongodb": "mongodb://localhost/notes_catke",
+
+    "//": "模板路径",
+    "templatePath": "app/view"
 }

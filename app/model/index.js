@@ -2,7 +2,7 @@
  * models
  * @module app/model
  * @author vfasky <vfasky@gmail.com>
- */	
+ */
 "use strict";
 
 var mongoose = require('mongoose');
@@ -18,6 +18,6 @@ mongoose.connect(config.mongodb, function(err) {
 });
 
 module.exports = exports = {
-	User: mongoose.model('User'),
-	Role: mongoose.model('Role')
+    User: mongoose.model('User'),
+    Role: mongoose.model('Role')
 };

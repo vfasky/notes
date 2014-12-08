@@ -1,11 +1,18 @@
 "use strict";
 
+require('./role');
+
 var mongoose = require('mongoose');
 var validator = require('validator');
 var crypto = require('crypto');
+var _ = require('lodash');
 
 var Schema = mongoose.Schema;
 
+/**
+ * 用户模型
+ * @module app/model/user
+ */
 var UserSchema = new Schema({
     //用户名
     name: {
@@ -49,10 +56,12 @@ var UserSchema = new Schema({
         type: Date,
         default: Date.now
     },
+    //关联角色
+    roles: [Schema.Types.ObjectId]
 });
 
 /**
- * 头像地址
+ * 取头像地址
  * @return {String}
  */
 UserSchema.virtual('avatarUrl').get(function() {
@@ -63,10 +72,45 @@ UserSchema.virtual('avatarUrl').get(function() {
 
     return url;
 
+    /**
+     * 设置头像地址
+     * @param  {String} url
+     * @return {Void}
+     */
 }).set(function(url) {
 
     this.avatar = url.trim();
 
 });
+
+/**
+ * 取用户角色
+ * @return {Array}
+ */
+UserSchema.methods.getRoles = function(){
+
+    return this.model('Role').find({
+        _id: {
+            $in: this.roles
+        }
+    }).exec();
+
+};
+
+/**
+ * 设置用户角色
+ * @param {Array} roles
+ * @return {module:app/model/user}
+ */
+UserSchema.methods.setRoles = function(roles){
+    var self = this;
+    this.roles = [];
+
+    _.each(roles, function(r){
+        r._id && self.roles.push(r._id);    
+    });
+
+    return this;
+};
 
 mongoose.model('User', UserSchema);

@@ -1,7 +1,5 @@
 "use strict";
 
-require('./role');
-
 var mongoose = require('mongoose');
 var validator = require('validator');
 var crypto = require('crypto');

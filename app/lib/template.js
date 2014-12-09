@@ -57,14 +57,16 @@ exports = module.exports = function(app, settings) {
     };
 
     app.context.renderString = function*(view, options) {
-        var html = yield render(view, options);
+        var html =
+            yield render(view, options);
 
         return html;
     };
 
 
     app.context.render = function*(view, options) {
-        var html = yield render(view, options);
+        var html =
+            yield render(view, options);
 
         this.body = html;
     };

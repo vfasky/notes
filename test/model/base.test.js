@@ -22,7 +22,7 @@ describe('model', function() {
 
         user.save(function(err) {
             assert.equal(
-                err.errors.name.message, 
+                err.errors.name.message,
                 'Validator failed for path `name` with value `1`'
             );
         });
@@ -37,7 +37,7 @@ describe('model', function() {
 
         user.save(function(err) {
             assert.equal(
-                err.errors.name.message, 
+                err.errors.name.message,
                 'Validator failed for path `name` with value `adksfsjfsfsfjsfjsdfksjdlkfjlsjflsjdl`'
             );
         });
@@ -52,7 +52,7 @@ describe('model', function() {
 
         user.save(function(err) {
             assert.equal(
-                err.errors.name.message, 
+                err.errors.name.message,
                 'Validator failed for path `name` with value `a_&*(`'
             );
         });
@@ -65,7 +65,7 @@ describe('model', function() {
 
         user.save(function(err) {
             assert.equal(
-                err.errors.name.message, 
+                err.errors.name.message,
                 'Name is required'
             );
         });
@@ -81,7 +81,7 @@ describe('model', function() {
 
         user.save(function(err) {
             assert.equal(
-                err.errors.email.message, 
+                err.errors.email.message,
                 'Please fill a valid email address'
             );
         });
@@ -91,19 +91,19 @@ describe('model', function() {
     it('user avatarUrl', function() {
         var User = mongoose.model('User');
 
-        var user = new User({ 
+        var user = new User({
             email: 'vfasky@gmail.com'
         });
 
         assert.equal(
-            user.avatarUrl, 
+            user.avatarUrl,
             '//cdn.v2ex.com/gravatar/79ba89b4bc6fd5749abb000d232df371?size=48'
         );
 
         user.avatarUrl = '//cdn.v2ex.com/gravatar/79ba89b4bc6fd5749abb000d232df371?size=48';
 
         assert.equal(
-            user.avatar, 
+            user.avatar,
             '//cdn.v2ex.com/gravatar/79ba89b4bc6fd5749abb000d232df371?size=48'
         );
 

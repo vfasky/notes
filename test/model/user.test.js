@@ -1,4 +1,3 @@
-
 "use strict";
 
 var assert = require('assert');
@@ -9,74 +8,74 @@ describe('model user role', function() {
 
     var roles = [];
 
-    before(function(done){
-    	var role = new model.Role({
-    		code: 'testA',
-    		description: '测试角色1'
-    	});
+    before(function(done) {
+        var role = new model.Role({
+            code: 'testA',
+            description: '测试角色1'
+        });
 
-    	role.save(function(err, role){
-    		if(err){
-    			return done(err);
-    		}
-    		roles.push(role);	
-    		done();
-    	});	
+        role.save(function(err, role) {
+            if (err) {
+                return done(err);
+            }
+            roles.push(role);
+            done();
+        });
     });
 
-   
-    before(function(done){
-    	var role = new model.Role({
-    		code: 'testB',
-    		description: '测试角色2'
-    	});
 
-    	role.save(function(err, role){
-    		if(err){
-    			return done(err);
-    		}
-    		roles.push(role);	
-    		done();
-    	});	
+    before(function(done) {
+        var role = new model.Role({
+            code: 'testB',
+            description: '测试角色2'
+        });
+
+        role.save(function(err, role) {
+            if (err) {
+                return done(err);
+            }
+            roles.push(role);
+            done();
+        });
     });
-   
-	var user = new model.User({
-		name: 'test',
-		email: 'test@mail.com',
-		active: true
-	});
 
-	it('set roles', function(done){
-		user.setRoles(roles);
-		user.save(done);
-	});
+    var user = new model.User({
+        name: 'test',
+        email: 'test@mail.com',
+        active: true
+    });
 
-	it('get roles', function(done){
-		user.getRoles().addBack(function(err, roles){
-			if(err){
-				return done(err);
-			}
-			var hit = 0;
+    it('set roles', function(done) {
+        user.setRoles(roles);
+        user.save(done);
+    });
 
-			roles.forEach(function(v){
-				if(v.code === 'testA' || v.code === 'testB'){
-					hit++;
-				}
-			});
+    it('get roles', function(done) {
+        user.getRoles().addBack(function(err, roles) {
+            if (err) {
+                return done(err);
+            }
+            var hit = 0;
 
-			assert.equal(2, hit);
-			done();
-		});
-   	});
+            roles.forEach(function(v) {
+                if (v.code === 'testA' || v.code === 'testB') {
+                    hit++;
+                }
+            });
 
-	after(function(done){
-		user.remove(done);	
-	});
+            assert.equal(2, hit);
+            done();
+        });
+    });
 
-	after(function(){
-		roles.forEach(function(role){
-			role.remove();	
-		});
-	});
-    
+    after(function(done) {
+        user.remove(done);
+    });
+
+    after(function() {
+        roles.forEach(function(role) {
+            role.remove();
+        });
+    });
+
 });

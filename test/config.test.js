@@ -5,7 +5,7 @@ var assert = require('assert');
 var path = require('path');
 
 describe('read config', function() {
-	it('rootPath', function(){
-		assert.equal(config.rootPath, path.join(__dirname, '../'));
-	});
+    it('rootPath', function() {
+        assert.equal(config.rootPath, path.join(__dirname, '../'));
+    });
 });

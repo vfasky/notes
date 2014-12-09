@@ -9,32 +9,32 @@ var Schema = mongoose.Schema;
  * @module app/model/BookSchema
  */
 var BookSchema = new Schema({
-	//关联用户
-	_user: {
-		type: Schema.Types.ObjectId,
-		ref: 'User'
-	},
+    //关联用户
+    _user: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    },
 
-	//笔记本名称
-	title: {
-		type: String,
+    //笔记本名称
+    title: {
+        type: String,
         trim: true,
         index: true,
         required: 'Title is required',
         default: 'default book'
-	},
+    },
 
-	//笔记总数
-	total: {
-		type: Number,
-		default: 0
-	},
+    //笔记总数
+    total: {
+        type: Number,
+        default: 0
+    },
 
-	description: {
+    description: {
         type: String
     },
 
-	createAt: {
+    createAt: {
         type: Date,
         default: Date.now
     },

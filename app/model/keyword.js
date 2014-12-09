@@ -10,18 +10,18 @@ var Schema = mongoose.Schema;
  */
 var KeywordSchema = new Schema({
 
-	keyword: {
-		type: String,
+    keyword: {
+        type: String,
         trim: true,
         unique: true,
         required: 'keyword is required'
-	},
+    },
 
-	total: {
-		type: Number,
-		index: true,
-		default: 0
-	}
+    total: {
+        type: Number,
+        index: true,
+        default: 0
+    }
 
 });
 

@@ -88,7 +88,7 @@ UserSchema.virtual('avatarUrl').get(function() {
  * 取用户角色
  * @return {Array}
  */
-UserSchema.methods.getRoles = function(){
+UserSchema.methods.getRoles = function() {
 
     return this.model('Role').find({
         _id: {
@@ -103,12 +103,12 @@ UserSchema.methods.getRoles = function(){
  * @param {Array} roles
  * @return {module:app/model/user}
  */
-UserSchema.methods.setRoles = function(roles){
+UserSchema.methods.setRoles = function(roles) {
     var self = this;
     this.roles = [];
 
-    _.each(roles, function(r){
-        r._id && self._roles.push(r._id);    
+    _.each(roles, function(r) {
+        r._id && self._roles.push(r._id);
     });
 
     return this;

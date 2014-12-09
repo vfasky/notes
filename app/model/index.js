@@ -27,5 +27,6 @@ module.exports = exports = {
     Book: mongoose.model('Book'),
     Note: mongoose.model('Note'),
     Keyword: mongoose.model('Keyword'),
-    NoteKeyword: mongoose.model('NoteKeyword')
+    NoteKeyword: mongoose.model('NoteKeyword'),
+    connection: mongoose.connection
 };

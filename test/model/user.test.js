@@ -39,45 +39,44 @@ describe('model user role', function() {
     		done();
     	});	
     });
+   
+	var user = new model.User({
+		name: 'test',
+		email: 'test@mail.com',
+		active: true
+	});
 
-    describe('user and role', function() {
-    	var user = new model.User({
-    		name: 'test',
-    		email: 'test@mail.com',
-    		active: true
-    	});
+	it('set roles', function(done){
+		user.setRoles(roles);
+		user.save(done);
+	});
 
-    	it('set roles', function(done){
-    		user.setRoles(roles);
-    		user.save(done);
-    	});
+	it('get roles', function(done){
+		user.getRoles().addBack(function(err, roles){
+			if(err){
+				return done(err);
+			}
+			var hit = 0;
 
-    	it('get roles', function(done){
-    		user.getRoles().addBack(function(err, roles){
-    			if(err){
-    				return done(err);
-    			}
-    			var hit = 0;
+			roles.forEach(function(v){
+				if(v.code === 'testA' || v.code === 'testB'){
+					hit++;
+				}
+			});
 
-    			roles.forEach(function(v){
-    				if(v.code === 'testA' || v.code === 'testB'){
-    					hit++;
-    				}
-    			});
+			assert.equal(2, hit);
+			done();
+		});
+   	});
 
-    			assert.equal(2, hit);
-    			done();
-    		});
-       	});
+	after(function(done){
+		user.remove(done);	
+	});
 
-    	after(function(done){
-    		user.remove(done);	
-    	});
-
-    	after(function(){
-    		roles.forEach(function(role){
-    			role.remove();	
-    		});
-    	});
-    });
+	after(function(){
+		roles.forEach(function(role){
+			role.remove();	
+		});
+	});
+    
 });

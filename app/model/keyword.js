@@ -15,6 +15,12 @@ var KeywordSchema = new Schema({
         trim: true,
         unique: true,
         required: 'keyword is required'
+	},
+
+	total: {
+		type: Number,
+		index: true,
+		default: 0
 	}
 
 });

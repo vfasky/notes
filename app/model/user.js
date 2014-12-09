@@ -55,7 +55,10 @@ var UserSchema = new Schema({
         default: Date.now
     },
     //关联角色
-    roles: [Schema.Types.ObjectId]
+    _roles: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Role'
+    }]
 });
 
 /**
@@ -89,7 +92,7 @@ UserSchema.methods.getRoles = function(){
 
     return this.model('Role').find({
         _id: {
-            $in: this.roles
+            $in: this._roles
         }
     }).exec();
 
@@ -105,7 +108,7 @@ UserSchema.methods.setRoles = function(roles){
     this.roles = [];
 
     _.each(roles, function(r){
-        r._id && self.roles.push(r._id);    
+        r._id && self._roles.push(r._id);    
     });
 
     return this;

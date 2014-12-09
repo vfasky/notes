@@ -10,21 +10,27 @@ var Schema = mongoose.Schema;
  */
 var NoteKeywordSchema = new Schema({
 
-	keywordId: {
+	_keyword: {
 		type: Schema.Types.ObjectId,
-		index: true
+		ref: 'Keyword'
 	},
 
-	noteId: {
+	_note: {
 		type: Schema.Types.ObjectId,
-		index: true
+		ref: 'Note'
 	},
 
-	userId: {
+	_user: {
 		type: Schema.Types.ObjectId,
-		index: true
+		ref: 'User'
 	},
 
+	//权重
+	weight: {
+		type: Number,
+		index: true,
+		default: 0
+	}
 });
 
 mongoose.model('NoteKeyword', NoteKeywordSchema);

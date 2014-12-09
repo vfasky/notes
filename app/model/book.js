@@ -10,9 +10,9 @@ var Schema = mongoose.Schema;
  */
 var BookSchema = new Schema({
 	//关联用户
-	userId: {
+	_user: {
 		type: Schema.Types.ObjectId,
-		index: true
+		ref: 'User'
 	},
 
 	//笔记本名称
@@ -20,7 +20,8 @@ var BookSchema = new Schema({
 		type: String,
         trim: true,
         index: true,
-        required: 'Title is required'
+        required: 'Title is required',
+        default: 'default book'
 	},
 
 	//笔记总数

@@ -2,7 +2,7 @@
 "use strict";
 
 var assert = require('assert');
-var model = require('../app/model');
+var model = require('../../app/model');
 
 
 describe('model user role', function() {
@@ -40,7 +40,7 @@ describe('model user role', function() {
     	});	
     });
 
-    describe('model user add role', function() {
+    describe('user and role', function() {
     	var user = new model.User({
     		name: 'test',
     		email: 'test@mail.com',

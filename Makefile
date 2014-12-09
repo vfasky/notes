@@ -1,4 +1,5 @@
-TESTS = test/*.test.js
+TESTS = test/*.test.js \
+        test/model/*.test.js
 
 dev:
 	@./node_modules/.bin/node-dev \

@@ -9,7 +9,7 @@ var Schema = mongoose.Schema;
 
 /**
  * 用户模型
- * @module app/model/user
+ * @module app/model/UserSchema
  */
 var UserSchema = new Schema({
     //用户名

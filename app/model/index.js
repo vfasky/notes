@@ -10,6 +10,10 @@ var config = require('../../config');
 
 require('./user');
 require('./role');
+require('./book');
+require('./note');
+require('./noteKeyword');
+require('./keyword');
 
 mongoose.connect(config.mongodb, function(err) {
     if (err) {
@@ -19,5 +23,9 @@ mongoose.connect(config.mongodb, function(err) {
 
 module.exports = exports = {
     User: mongoose.model('User'),
-    Role: mongoose.model('Role')
+    Role: mongoose.model('Role'),
+    Book: mongoose.model('Book'),
+    Note: mongoose.model('Note'),
+    Keyword: mongoose.model('Keyword'),
+    NoteKeyword: mongoose.model('NoteKeyword')
 };

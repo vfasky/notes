@@ -5,6 +5,11 @@ var validator = require('validator');
 
 var Schema = mongoose.Schema;
 
+/**
+ * 角色模型
+ * @module app/model/RoleSchema
+ * @type {Schema}
+ */
 var RoleSchema = new Schema({
     //角色代码
     code: {

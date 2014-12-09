@@ -2,9 +2,9 @@
 
 var assert = require('assert');
 var mongoose = require('mongoose');
-var config = require('../config');
+var config = require('../../config');
 
-require('../app/model/user');
+require('../../app/model/user');
 
 describe('model', function() {
     mongoose.connect(config.mongodb, function(err) {

@@ -19,6 +19,9 @@
     "url": "https://github.com/vfasky/notes/issues"
   },
   "homepage": "https://github.com/vfasky/notes",
+  "engines": {
+    "node": ">= 0.11.13"
+  },
   "dependencies": {
     "koa": "^0.13.0",
     "koa-generic-session": "^1.3.0",

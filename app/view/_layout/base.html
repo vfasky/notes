@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+    <meta name="renderer" content="webkit" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="keywords" content="{% block keywords %}{% endblock %}" />
+    <meta name="description" content="{% block description %}{% endblock %}" />
+
+    <title>{% block title %}{% endblock %}</title>
+
+    {% block css %}{% endblock %}
+
+    <!--[if lt IE 9]>
+    <script src="//cdnjscn.b0.upaiyun.com/libs/html5shiv/3.7/html5shiv.min.js"></script>
+    <script src="//cdnjscn.b0.upaiyun.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]--> 
+     
+</head>
+<body class="{% block bodyClass %}{% endblock %}">
+    {% block head %}{% endblock %}
+
+    {% block body %}{% endblock %}
+
+    {% block foot %}{% endblock %}
+
+    {% block js %}{% endblock %}
+</body>
+</html>

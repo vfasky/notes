@@ -16,7 +16,7 @@ var app = module.exports = koa();
  * 监听端口
  * @type {Int}
  */
-var port = process.env.PORT || 3000;
+var port = process.env.PORT || 3001;
 
 /**
  * 设置一个签名 Cookie 的密钥
@@ -28,7 +28,7 @@ app.keys = config.keys;
  * 定义 session store
  */
 app.use(session({
-    store: memcachedStore()
+    store: memcachedStore(config.memcached)
 }));
 
 /**
@@ -38,6 +38,12 @@ template(app, {
     templatePath: config.templatePath
 });
 
+
+app.use(
+	require('./app/route').middleware()
+);
+
 if (!module.parent) {
     app.listen(port);
+    console.log('note web app listen: ' + port);
 }

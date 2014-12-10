@@ -5,6 +5,12 @@
     "//": "mongodb",
     "mongodb": "mongodb://localhost/notes_catke",
 
+    "//": "memcached 连接信息，用于存在session",
+    "memcached": {
+    	"host": "localhost",
+    	"port": 11211
+    },
+
     "//": "模板路径",
     "templatePath": "app/view"
 }

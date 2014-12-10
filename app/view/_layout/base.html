@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
     <meta name="renderer" content="webkit" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
     <meta name="keywords" content="{% block keywords %}{% endblock %}" />
@@ -19,6 +20,10 @@
      
 </head>
 <body class="{% block bodyClass %}{% endblock %}">
+    <!--[if lt IE 8]>
+    <div class="alert error">您的浏览器版本<strong>很旧很旧</strong>，为了正常地访问网站，请升级您的浏览器 <a target="_blank" href="http://browsehappy.com">立即升级</a></div>
+    <![endif]-->
+
     {% block head %}{% endblock %}
 
     {% block body %}{% endblock %}

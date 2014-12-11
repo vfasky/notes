@@ -7,6 +7,7 @@ var Schema = mongoose.Schema;
 
 /**
  * 角色模型
+ * @author vfasky <vfasky@gmail.com>
  * @module app/model/RoleSchema
  * @type {Schema}
  */

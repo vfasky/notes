@@ -7,6 +7,7 @@ var segment = require('../lib/segment');
 
 /**
  * 笔记模型
+ * @author vfasky <vfasky@gmail.com>
  * @module app/model/NoteSchema
  */
 var NoteSchema = new Schema({

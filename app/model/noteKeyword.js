@@ -6,6 +6,7 @@ var Schema = mongoose.Schema;
 
 /**
  * 关键字与笔记关联模型
+ * @author vfasky <vfasky@gmail.com>
  * @module app/model/NoteKeywordSchema
  */
 var NoteKeywordSchema = new Schema({

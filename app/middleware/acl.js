@@ -1,4 +1,8 @@
 "use strict";
+/**
+ * 访问控制
+ * @author vfasky <vfasky@gmail.com>
+ */    
 
 var _ = require('lodash');
 

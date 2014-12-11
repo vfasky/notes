@@ -7,6 +7,7 @@ var koa = require('koa');
 
 var session = require('koa-generic-session');
 var memcachedStore = require('koa-memcached');
+var bodyParser = require('koa-bodyparser');
 var config = require('./config');
 var template = require('./app/lib/template');
 
@@ -38,6 +39,10 @@ template(app, {
     templatePath: config.templatePath
 });
 
+/**
+ * 解释body
+ */
+app.use(bodyParser());
 
 app.use(
 	require('./app/route').middleware()

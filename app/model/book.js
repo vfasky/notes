@@ -6,6 +6,7 @@ var Schema = mongoose.Schema;
 
 /**
  * 笔记本模型
+ * @author vfasky <vfasky@gmail.com>
  * @module app/model/BookSchema
  */
 var BookSchema = new Schema({

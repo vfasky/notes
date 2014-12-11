@@ -1,5 +1,10 @@
 "use strict";
 
+/**
+ * 分词
+ * @author vfasky <vfasky@gmail.com>
+ */    
+
 // 载入模块
 var Segment = require('segment').Segment;
 // 创建实例

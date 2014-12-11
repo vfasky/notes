@@ -9,6 +9,7 @@ var Schema = mongoose.Schema;
 
 /**
  * 用户模型
+ * @author vfasky <vfasky@gmail.com>
  * @module app/model/UserSchema
  */
 var UserSchema = new Schema({

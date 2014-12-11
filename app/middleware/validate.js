@@ -141,11 +141,10 @@ module.exports = exports = function(rules) {
 
 /**
  * 必填
- * @return {[type]} [description]
  */
 module.exports.required = function() {
     var rule = function(x) {
-        return String(x || '').length > 0;
+        return String(x || '').trim().length > 0;
     };
     rule.isInstantiate = true;
     return rule;

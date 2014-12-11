@@ -11,38 +11,40 @@ describe('validate', function() {
 
     app.post('/test/validate/required', validate({
         test: validate.required
-    }), function *(){
+    }), function*() {
         this.body = this.validateError;
     });
 
     app.del('/test/validate/requiredMsg', validate({
         test: [validate.required, 'test Not None']
-    }), function *(){
+    }), function*() {
         this.body = this.validateError;
     });
 
     app.put('/test/validate/email', validate({
         test: validate.required,
-        email: validate.isEmail()
-    }), function *(){
+        email: [validate.required, validate.isEmail()]
+    }), function*() {
         this.body = this.validateError;
     });
 
     app.post('/test/validate/emailMsg', validate({
         test: validate.required,
-        email: [validate.isEmail, 'Please fill a valid email address']
-    }), function *(){
+        email: [
+            validate.required, [validate.isEmail, 'Please fill a valid email address']
+        ]
+    }), function*() {
         this.body = this.validateError;
     });
 
     app.post('/test/validate/byteLength', validate({
         test: validate.isByteLength(3, 6),
-    }), function *(){
+    }), function*() {
         this.body = this.validateError;
     });
 
-   
-    var noteApp = request(app.callback()); 
+
+    var noteApp = request(app.callback());
 
     it('required', function(done) {
         noteApp.post('/test/validate/required')

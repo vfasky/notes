@@ -3,7 +3,7 @@
 /**
  * 验证请求
  * @author vfasky <vfasky@gmail.com>
- */	
+ */
 
 var _ = require('lodash');
 var validator = require('validator');
@@ -70,7 +70,7 @@ var check = function(value, rules) {
     if (false === _.isArray(rules)) {
         return [getInstantiate(rules)(value)];
     }
-    if (2 === rules.length && false === _.isFunction(rules[1])) {
+    if (2 === rules.length &&  _.isString(rules[1])) {
         return [getInstantiate(rules[0])(value), rules[1]];
     }
     var res = [true];
@@ -87,7 +87,7 @@ var check = function(value, rules) {
             }
 
         } else {
-            if (false === getInstantiate(v[0])(value)) {
+            if (false === getInstantiate(v)(value)) {
                 res = [false];
                 return false;
             }
@@ -125,7 +125,7 @@ module.exports = exports = function(rules) {
             var res = check(body[v], rules[v]);
 
             if (false === res[0]) {
-                
+
                 if (res.length === 2) {
                     self.validateError = res[1];
                 } else {

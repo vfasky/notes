@@ -11,6 +11,9 @@
     	"port": 11211
     },
 
+    "//": "网站管理员邮箱",
+    "superUserEmail": "",
+
     "//": "模板路径",
     "templatePath": "app/view"
 }

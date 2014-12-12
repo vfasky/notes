@@ -44,9 +44,62 @@ template(app, {
  */
 app.use(bodyParser());
 
-app.use(
-	require('./app/route').middleware()
-);
+/**
+ * 错误处理
+ */
+app.use(function*(next) {
+    try {
+        yield next;
+    } catch (err) {
+        this.status = err.status || 500;
+
+        this.app.emit('error', err, this);
+
+        var t = this.accepts('json', 'html');
+        if (t === 'json') {
+            this.body = {
+                state: false,
+                error: err.message
+            };
+        } else {
+            yield this.render('error.html', {
+                message: err.message
+            });
+        }
+    }
+});
+
+/**
+ * 绑定路由
+ */
+app.use(require('./app/route').middleware());
+app.use(require('./app/route/install').middleware());
+
+/**
+ * 404
+ */
+app.use(function *() {
+    this.status = 404;
+
+    var t = this.accepts('json', 'html');
+    if (t === 'json') {
+        this.body = {
+            message: 'Page Not Found'
+        };
+    } else {
+        yield this.render('404.html');
+    }
+});
+
+/**
+ * 错误记录
+ */
+app.on('error', function(err, ctx) {
+    //TODO log	
+    if (err.status === 500) {
+        console.log(err, ctx);
+    }
+});
 
 if (!module.parent) {
     app.listen(port);

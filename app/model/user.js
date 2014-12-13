@@ -20,7 +20,7 @@ var UserSchema = new Schema({
         unique: true,
         required: 'Name is required',
         validate: function(x) {
-            return validator.isAlphanumeric(x) && validator.isLength(x, 3, 15);
+            return validator.isAlphanumeric(x) && validator.isByteLength(x, 3, 15);
         }
     },
     email: {

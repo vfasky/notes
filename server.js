@@ -10,7 +10,7 @@ var memcachedStore = require('koa-memcached');
 var bodyParser = require('koa-bodyparser');
 var config = require('./config');
 var template = require('./app/lib/template');
-
+var path = require('path');
 var app = module.exports = koa();
 
 /**
@@ -24,6 +24,13 @@ var port = process.env.PORT || 3001;
  * @type {Array}
  */
 app.keys = config.keys;
+
+/**
+ * 静态文件
+ */
+if(null === config.staticHost){
+    app.use(require('koa-static')(path.join(__dirname, 'static')));
+}
 
 /**
  * 定义 session store
@@ -75,21 +82,7 @@ app.use(function*(next) {
 app.use(require('./app/route').middleware());
 app.use(require('./app/route/install').middleware());
 
-/**
- * 404
- */
-app.use(function *() {
-    this.status = 404;
 
-    var t = this.accepts('json', 'html');
-    if (t === 'json') {
-        this.body = {
-            message: 'Page Not Found'
-        };
-    } else {
-        yield this.render('404.html');
-    }
-});
 
 /**
  * 错误记录
@@ -102,6 +95,23 @@ app.on('error', function(err, ctx) {
 });
 
 if (!module.parent) {
+
+    /**
+     * 404
+     */
+    app.use(function *() {
+        this.status = 404;
+
+        var t = this.accepts('json', 'html');
+        if (t === 'json') {
+            this.body = {
+                message: 'Page Not Found'
+            };
+        } else {
+            yield this.render('404.html');
+        }
+    });
+    
     app.listen(port);
     console.log('note web app listen: ' + port);
 }

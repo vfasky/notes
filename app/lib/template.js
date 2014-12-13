@@ -3,6 +3,9 @@
 var env = process.env.NODE_ENV || 'deploy';
 var nunjucks = require('nunjucks');
 var _ = require('lodash');
+var config = require('../../config');
+var fs = require('fs');
+var path = require('path');
 
 /**
  * default render options
@@ -12,6 +15,15 @@ var defaultSettings = {
     autoescape: true,
     watch: env === 'development'
 };
+
+//时间缀
+var _time = (new Date()).getTime();
+
+//文件 hash
+var _hash = JSON.parse(fs.readFileSync(
+    path.join(__dirname, '../../build/hash.json')
+), 'utf8');
+ 
 
 /**
  * 模板引擎
@@ -42,7 +54,16 @@ exports = module.exports = function(app, settings) {
      */
     var locals = {
         config: require('../../config'),
-        ENV: env
+        ENV: env,
+        //静态文件地址
+        staticUrl: function(uri){
+            var hash = _hash[uri] || _time;
+
+            if(null === config.staticHost){
+                return '/' + uri + '?v=' + hash;
+            }
+            return config.staticHost + uri + '?v=' + hash;
+        }
     };
 
     /**

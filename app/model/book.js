@@ -21,7 +21,6 @@ var BookSchema = new Schema({
         type: String,
         trim: true,
         index: true,
-        required: 'Title is required',
         default: 'default book'
     },
 

@@ -5,11 +5,17 @@
     "//": "mongodb",
     "mongodb": "mongodb://localhost/notes_catke",
 
+    "//": "用于测试的 mongodb",
+    "testMongodb": "mongodb://localhost/notes_catke_test",
+
     "//": "memcached 连接信息，用于存在session",
     "memcached": {
     	"host": "localhost",
     	"port": 11211
     },
+
+    "//": "静态资源cdn",
+    "staticHost": null,
 
     "//": "网站管理员邮箱",
     "superUserEmail": "",

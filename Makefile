@@ -7,7 +7,7 @@ dev:
 	server.js
 
 test:
-	@./node_modules/.bin/mocha \
+	@NODE_ENV=test ./node_modules/.bin/mocha \
 	--harmony \
 	$(TESTS)
 

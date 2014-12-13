@@ -15,7 +15,9 @@ require('./note');
 require('./noteKeyword');
 require('./keyword');
 
-mongoose.connect(config.mongodb, function(err) {
+var cfg = process.env.NODE_ENV === 'test' ? config.testMongodb : config.mongodb;
+
+mongoose.connect(cfg, function(err) {
     if (err) {
         console.error('connect to %s error: ', config.mongodb, err.message);
     }

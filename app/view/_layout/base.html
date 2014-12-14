@@ -30,7 +30,9 @@
     {% block body %}{% endblock %}
 
     {% block foot %}{% endblock %}
-
+    
+    <script src="//cdnjscn.b0.upaiyun.com/libs/require.js/2.1.14/require.min.js"></script>
+    <script src="{{staticUrl('js/config.js')}}"></script>
     {% block js %}{% endblock %}
 </body>
 </html>

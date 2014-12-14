@@ -90,6 +90,7 @@
       "before": true,
       "afterEach": true,
       "beforeEach": true,
-      "after": true
+      "after": true,
+      "define": true
     }
 }

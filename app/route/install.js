@@ -39,8 +39,8 @@ router.get('/install', function*() {
 });
 
 router.post('/install', validate({
-	name: [validate.isAlphanumeric, validate.isByteLength(3, 15)],
-	password: validate.isByteLength(6, 32)
+	name: [validate.isAlphanumeric, validate.isLength(3, 15)],
+	password: validate.isLength(6, 32)
 }), function*() {
 	if(this.validateError){
 		this.throw(200, this.validateError);

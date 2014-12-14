@@ -9,11 +9,31 @@
 
 		<form>
 			<div class="ctr">
-				<input type="text" name="name" placeholder="管理员账号">
+				<input type="text" value="" name="name" placeholder="管理员账号">
 			</div>
 			<div class="ctr">
 				<input type="password" name="password" placeholder="密码">
 			</div>
 		</form>
 	</div>
+{% endblock %}
+
+{% block js %}
+	<script>
+		require(['jquery', 'catke'], function($, catke){
+			"use strict";
+			var Validate = catke.Validate;
+			var form = new Validate($('form'), {
+				rules: {
+					name: [
+						[Validate.isLength(3, 15), '容许 3 至 15 个字符'],
+						Validate.isAlphanumeric
+					],
+					password: [Validate.isLength(6, 32), '容许 6 至 32 个字符']
+				}
+			});
+
+			form.valid();
+		});
+	</script>
 {% endblock %}

@@ -4,8 +4,8 @@
  * @author vfasky <vfasky@gmail.com>
  */	
 define('catke/validate', 
-  ['jquery', 'validator', 'catke/tooltips'], 
-  function($, validator, Tooltips){
+  ['jquery', 'validator', 'catke/toolTips'], 
+  function($, validator, ToolTips){
 	"use strict";
 
 	/**
@@ -172,7 +172,7 @@ define('catke/validate',
     	var self = this;
 
     	if(!tip){
-    		tip = new Tooltips($el, {
+    		tip = new ToolTips($el, {
     			//tipClass: 'danger',
     			placement: 'bottom',
     			trigger: 'manual',

@@ -1,0 +1,30 @@
+.ck-poptips {
+    position:fixed;
+    border-radius:4px;
+    padding:5px 10px;
+    background:black;
+    color:white;
+    top:50%;
+    text-align:center;
+    left:50%;
+    z-index:9999;
+    line-height:25px;
+
+    &.success {
+        background:#5cb85c;
+    }
+
+    &.warning {
+       background:#f0ad4e;
+    }
+
+    &.error {
+        background:#d9534f;
+    }
+    
+    span.icon {
+        font-size:24px;
+        margin-right:12px;
+        vertical-align:middle;
+    }
+}

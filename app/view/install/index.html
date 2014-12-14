@@ -9,10 +9,10 @@
 
 		<form>
 			<div class="ctr">
-				<input type="text" value="" name="name" placeholder="管理员账号">
+				<input type="text" value="{{email.split('@')[0]}}" name="name" placeholder="管理员账号">
 			</div>
 			<div class="ctr">
-				<input type="password" name="password" placeholder="密码">
+				<input type="text" name="password" placeholder="密码">
 			</div>
 		</form>
 	</div>
@@ -23,7 +23,11 @@
 		require(['jquery', 'catke'], function($, catke){
 			"use strict";
 			var Validate = catke.Validate;
-			var form = new Validate($('form'), {
+			var $form = $('form');
+
+			catke.placeholder($form.find('[placeholder]'));
+
+			var form = new Validate($form, {
 				rules: {
 					name: [
 						[Validate.isLength(3, 15), '容许 3 至 15 个字符'],
@@ -33,7 +37,12 @@
 				}
 			});
 
-			form.valid();
+			$form.on('submit', function(){
+				if(form.valid()){
+					console.log(form.getData());
+				}
+				return false;
+			});
 		});
 	</script>
 {% endblock %}

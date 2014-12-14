@@ -5,7 +5,7 @@
  * @author kotenei <kotenei@qq.com>
  */
  
-define('catke/tooltips', ['jquery'], function ($) {
+define('catke/toolTips', ['jquery'], function ($) {
     "use strict";
 
     /**
@@ -15,7 +15,7 @@ define('catke/tooltips', ['jquery'], function ($) {
      * @param {JQuery} $element - dom
      * @param {Object} options - 参数
      */
-    var Tooltips = function ($element, options) {
+    var ToolTips = function ($element, options) {
         this.$element = $element;
         this.options = $.extend({}, {
             delay: 0,
@@ -33,7 +33,7 @@ define('catke/tooltips', ['jquery'], function ($) {
      * 初始化
      * @return {Void}
      */
-    Tooltips.prototype.init = function () {
+    ToolTips.prototype.init = function () {
         this.$tips = $('<div class="ck-tooltips"><div class="tooltips-arrow"></div><div class="tooltips-title"></div><div class="tooltips-inner"></div></div>');
         this.$tips.addClass(this.options.placement).addClass(this.options.tipClass);
         //this.setTitle();
@@ -62,7 +62,7 @@ define('catke/tooltips', ['jquery'], function ($) {
      * 设置内容
      * @param {String} content - 内容
      */
-    Tooltips.prototype.setContent = function (content) {
+    ToolTips.prototype.setContent = function (content) {
         content = $.trim(content || this.options.content);
         if (content.length === 0) {
             content = this.$element.attr('data-content') || "";
@@ -74,7 +74,7 @@ define('catke/tooltips', ['jquery'], function ($) {
     /**
      * 定位
      */
-    Tooltips.prototype.setPosition = function () {
+    ToolTips.prototype.setPosition = function () {
         var pos = this.getOffset();
         this.$tips.css(pos);
     };
@@ -83,7 +83,7 @@ define('catke/tooltips', ['jquery'], function ($) {
      * 获取定位偏移值
      * @return {Object} 
      */
-    Tooltips.prototype.getOffset = function () {
+    ToolTips.prototype.getOffset = function () {
         var placement = this.options.placement;
         //var container = this.options.container;
         var $element = this.$element;
@@ -110,7 +110,7 @@ define('catke/tooltips', ['jquery'], function ($) {
      * 显示tips
      * @return {Void}
      */
-    Tooltips.prototype.show = function () {
+    ToolTips.prototype.show = function () {
         if ($.trim(this.options.content).length === 0) {
             this.hide();
             return;
@@ -124,7 +124,7 @@ define('catke/tooltips', ['jquery'], function ($) {
      * 隐藏tips
      * @return {Void}
      */
-    Tooltips.prototype.hide = function () {
+    ToolTips.prototype.hide = function () {
         this.isShow = false;
         this.$tips.hide().removeClass('in');
     };
@@ -133,7 +133,7 @@ define('catke/tooltips', ['jquery'], function ($) {
      * 切换
      * @return {Void}
      */
-    Tooltips.prototype.toggle = function () {
+    ToolTips.prototype.toggle = function () {
         if (this.isShow) {
             this.hide();
         } else {
@@ -142,5 +142,5 @@ define('catke/tooltips', ['jquery'], function ($) {
         return false;
     };
 
-    return Tooltips;
+    return ToolTips;
 });

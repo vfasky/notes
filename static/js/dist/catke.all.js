@@ -1,4 +1,89 @@
 /**
+ * 封装http请求
+ * @module catke/http
+ * @author vfasky <vfasky@gmail.com>
+ */
+define('catke/http', ['jquery', 'catke/popTips'], function($, popTips) {
+    "use strict";
+
+    var ajax = function(type, url, data, contentType) {
+
+        var dtd = $.Deferred();
+
+        if (contentType && contentType.indexOf('json') !== -1) {
+            data = JSON.stringify(data);
+        }
+
+        contentType = contentType || 'application/x-www-form-urlencoded; charset=UTF-8';
+
+        $.ajax(url, {
+            type: type,
+            cache: false,
+            data: data || {},
+            dataType: 'json',
+            contentType: contentType
+        }).done(function(ret) {
+            if (ret.state === false) {
+                popTips.error(ret.error || '发生未知错误', 1000);
+                if (ret.url) {
+                    setTimeout(function() {
+                        window.location.href = ret.url;
+                    }, 800);
+                }
+            } else {
+                dtd.resolve(ret.Data);
+            }
+        }).fail(function() {
+            popTips.error('服务端发生错误了', 1000);
+            dtd.reject();
+        });
+        return dtd.promise();
+    };
+
+    var undef;
+
+    var exports = {
+        get: function(url, data, isJson) {
+            var contentType = false;
+            if (isJson !== undef) {
+                contentType = 'application/json;charset=utf-8';
+            }
+            return ajax('GET', url, data, contentType);
+        },
+        post: function(url, data, isJson) {
+            var contentType = false;
+            if (isJson !== undef) {
+                contentType = 'application/json;charset=utf-8';
+            }
+            return ajax('POST', url, data, contentType);
+        },
+        put: function(url, data, isJson) {
+            var contentType = false;
+            if (isJson !== undef) {
+                contentType = 'application/json;charset=utf-8';
+            }
+            return ajax('PUT', url, data, contentType);
+        },
+        head: function(url, data, isJson) {
+            var contentType = false;
+            if (isJson !== undef) {
+                contentType = 'application/json;charset=utf-8';
+            }
+            return ajax('HEAD', url, data, contentType);
+        },
+        del: function(url, data, isJson) {
+            var contentType = false;
+            if (isJson !== undef) {
+                contentType = 'application/json;charset=utf-8';
+            }
+            return ajax('DELETE', url, data, contentType);
+        }
+    };
+
+    return exports;
+});
+
+/**
  * placeholder
  * @date 2014-11-10 15:22:41
  * @author vfasky <vfasky@gmail.com>
@@ -134,6 +219,94 @@ define('catke/placeholder', ['jquery', 'catke/util', 'catke/task'], function($, 
 });
 
 /**
+ * 弹出提示模块
+ * @date 2014-09-10
+ * @author kotenei <kotenei@qq.com>
+ */
+define('catke/popTips', ['jquery'], function ($) {
+
+    /**
+     * 弹出提示模块
+     * @exports module:catke/popTips
+     * @type {Object} 
+     * @example
+     *     require(['catke'], function(catke){
+     *         catke.popTips.success('成功');
+     *         catke.popTips.error('error');
+     *     });
+     */
+    var PopTips = (function () {
+
+        var _instance;
+
+        function init() {
+
+            var $tips, tm;
+
+            function build(status, content, delay, callback) {
+
+                if (tm) { clearTimeout(tm); }
+
+                if ($.isFunction(delay)) { callback = delay; delay = 3000; }
+
+                callback = callback || function(){};
+                delay = delay || 3000;
+
+                if ($tips) { $tips.stop().remove(); }
+
+                $tips = $(getHtml(status, content))
+                        .appendTo(document.body).hide();
+
+                $tips.css({ marginLeft: -($tips.width() / 2), marginTop: -($tips.height() / 2) }).fadeIn('fase', function () {
+                    tm = setTimeout(function () {
+                        $tips.stop().remove();
+                        callback();
+                    }, delay);
+                });
+            }
+
+            function getHtml(status, content) {
+                var html = [];
+                switch (status) {
+                    case "success":
+                        html.push('<div class="ck-pop-tips success"><span class="cpwicon-check"></span>&nbsp;<span>' + content + '</span></div>');
+                        break;
+                    case "error":
+                        html.push('<div class="ck-pop-tips error"><span class="cpwicon-cross"></span>&nbsp;<span>' + content + '</span></div>');
+                        break;
+                    case "warning":
+                        html.push('<div class="ck-pop-tips warning"><span class="cpwicon-warning"></span>&nbsp;<span>' + content + '</span></div>');
+                        break;
+                }
+                return html.join('');
+            }
+
+            return {
+                success: function (content, callback, delay) {
+                    build("success", content, callback, delay);
+                },
+                error: function (content, callback, delay) {
+                    build("error", content, callback, delay);
+                },
+                warning: function (content, callback, delay) {
+                    build("warning", content, callback, delay);
+                }
+            };
+        }
+
+        return {
+            getInstance: function () {
+                if (!_instance) {
+                    _instance = init();
+                }
+                return _instance;
+            }
+        };
+    })();
+
+    return PopTips.getInstance();
+});
+/**
  * 任务队列
  * @module catke/task
  * @author vfasky <vfasky@gmail.com>
@@ -246,7 +419,7 @@ define('catke/task', ['jquery'], function($) {
  * @author kotenei <kotenei@qq.com>
  */
  
-define('catke/tooltips', ['jquery'], function ($) {
+define('catke/toolTips', ['jquery'], function ($) {
     "use strict";
 
     /**
@@ -256,7 +429,7 @@ define('catke/tooltips', ['jquery'], function ($) {
      * @param {JQuery} $element - dom
      * @param {Object} options - 参数
      */
-    var Tooltips = function ($element, options) {
+    var ToolTips = function ($element, options) {
         this.$element = $element;
         this.options = $.extend({}, {
             delay: 0,
@@ -274,7 +447,7 @@ define('catke/tooltips', ['jquery'], function ($) {
      * 初始化
      * @return {Void}
      */
-    Tooltips.prototype.init = function () {
+    ToolTips.prototype.init = function () {
         this.$tips = $('<div class="ck-tooltips"><div class="tooltips-arrow"></div><div class="tooltips-title"></div><div class="tooltips-inner"></div></div>');
         this.$tips.addClass(this.options.placement).addClass(this.options.tipClass);
         //this.setTitle();
@@ -303,7 +476,7 @@ define('catke/tooltips', ['jquery'], function ($) {
      * 设置内容
      * @param {String} content - 内容
      */
-    Tooltips.prototype.setContent = function (content) {
+    ToolTips.prototype.setContent = function (content) {
         content = $.trim(content || this.options.content);
         if (content.length === 0) {
             content = this.$element.attr('data-content') || "";
@@ -315,7 +488,7 @@ define('catke/tooltips', ['jquery'], function ($) {
     /**
      * 定位
      */
-    Tooltips.prototype.setPosition = function () {
+    ToolTips.prototype.setPosition = function () {
         var pos = this.getOffset();
         this.$tips.css(pos);
     };
@@ -324,7 +497,7 @@ define('catke/tooltips', ['jquery'], function ($) {
      * 获取定位偏移值
      * @return {Object} 
      */
-    Tooltips.prototype.getOffset = function () {
+    ToolTips.prototype.getOffset = function () {
         var placement = this.options.placement;
         //var container = this.options.container;
         var $element = this.$element;
@@ -351,7 +524,7 @@ define('catke/tooltips', ['jquery'], function ($) {
      * 显示tips
      * @return {Void}
      */
-    Tooltips.prototype.show = function () {
+    ToolTips.prototype.show = function () {
         if ($.trim(this.options.content).length === 0) {
             this.hide();
             return;
@@ -365,7 +538,7 @@ define('catke/tooltips', ['jquery'], function ($) {
      * 隐藏tips
      * @return {Void}
      */
-    Tooltips.prototype.hide = function () {
+    ToolTips.prototype.hide = function () {
         this.isShow = false;
         this.$tips.hide().removeClass('in');
     };
@@ -374,7 +547,7 @@ define('catke/tooltips', ['jquery'], function ($) {
      * 切换
      * @return {Void}
      */
-    Tooltips.prototype.toggle = function () {
+    ToolTips.prototype.toggle = function () {
         if (this.isShow) {
             this.hide();
         } else {
@@ -383,7 +556,7 @@ define('catke/tooltips', ['jquery'], function ($) {
         return false;
     };
 
-    return Tooltips;
+    return ToolTips;
 });
 /**
  * util
@@ -429,8 +602,8 @@ define('catke/util', function() {
  * @author vfasky <vfasky@gmail.com>
  */	
 define('catke/validate', 
-  ['jquery', 'validator', 'catke/tooltips'], 
-  function($, validator, Tooltips){
+  ['jquery', 'validator', 'catke/toolTips'], 
+  function($, validator, ToolTips){
 	"use strict";
 
 	/**
@@ -597,7 +770,7 @@ define('catke/validate',
     	var self = this;
 
     	if(!tip){
-    		tip = new Tooltips($el, {
+    		tip = new ToolTips($el, {
     			//tipClass: 'danger',
     			placement: 'bottom',
     			trigger: 'manual',
@@ -708,11 +881,13 @@ define('catke/validate',
     return Validate;
 });
 ;
-define("catke", ["catke/placeholder", "catke/task", "catke/tooltips", "catke/util", "catke/validate"], function(_placeholder, _task, _tooltips, _util, _validate){
+define("catke", ["catke/http", "catke/placeholder", "catke/popTips", "catke/task", "catke/toolTips", "catke/util", "catke/validate"], function(_http, _placeholder, _popTips, _task, _toolTips, _util, _validate){
     return {
+        "http" : _http,
         "placeholder" : _placeholder,
+        "PopTips" : _popTips,
         "Task" : _task,
-        "Tooltips" : _tooltips,
+        "ToolTips" : _toolTips,
         "util" : _util,
         "Validate" : _validate
     };

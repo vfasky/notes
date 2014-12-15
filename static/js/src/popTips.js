@@ -56,13 +56,13 @@ define('catke/popTips', ['jquery'], function($) {
             var html = [];
             switch (status) {
                 case "success":
-                    html.push('<div class="ck-poptips success"><span class="icon success"></span>' + content + '</div>');
+                    html.push('<div class="ck-poptips success"><i class="nicon nicon-success"></i>' + content + '</div>');
                     break;
                 case "error":
-                    html.push('<div class="ck-poptips error"><span class="icon error"></span>' + content + '</div>');
+                    html.push('<div class="ck-poptips error"><i class="nicon nicon-error"></i>' + content + '</div>');
                     break;
                 case "warning":
-                    html.push('<div class="ck-poptips warning"><span class="icon warning"></span>' + content + '</div>');
+                    html.push('<div class="ck-poptips warning"><i class="nicon nicon-warning"></i>' + content + '</div>');
                     break;
             }
             return html.join('');

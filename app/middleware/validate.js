@@ -147,6 +147,7 @@ module.exports.required = function() {
         return String(x || '').trim().length > 0;
     };
     rule.isInstantiate = true;
+    rule.type = 'required';
     return rule;
 };
 
@@ -155,12 +156,19 @@ module.exports.required = function() {
  */
 _.each(_rules, function(v) {
     module.exports[v] = function() {
-        var args = 1 <= arguments.length ? [].slice.call(arguments, 0) : [];
+        var total = arguments.length;
+        var args = 1 <= total ? [].slice.call(arguments, 0) : [];
 
         var rule = function(x) {
-            args.splice(0, 0, x);
+            if(total === args.length){
+                args.splice(0, 0, x);
+            }   
+            else{
+                args[0] = x;
+            }
             return validator[v].apply(null, args);
         };
+        rule.type = v;
         rule.isInstantiate = true;
         return rule;
     };

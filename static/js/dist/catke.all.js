@@ -24,17 +24,17 @@ define('catke/http', ['jquery', 'catke/popTips'], function($, popTips) {
             contentType: contentType
         }).done(function(ret) {
             if (ret.state === false) {
-                popTips.error(ret.error || '发生未知错误', 1000);
+                popTips.error(ret.error || '发生未知错误');
                 if (ret.url) {
                     setTimeout(function() {
                         window.location.href = ret.url;
                     }, 800);
                 }
             } else {
-                dtd.resolve(ret.Data);
+                dtd.resolve(ret.data);
             }
         }).fail(function() {
-            popTips.error('服务端发生错误了', 1000);
+            popTips.error('服务端发生错误了');
             dtd.reject();
         });
         return dtd.promise();
@@ -223,89 +223,87 @@ define('catke/placeholder', ['jquery', 'catke/util', 'catke/task'], function($, 
  * @date 2014-09-10
  * @author kotenei <kotenei@qq.com>
  */
-define('catke/popTips', ['jquery'], function ($) {
+define('catke/popTips', ['jquery'], function($) {
+    "use strict";
 
     /**
      * 弹出提示模块
      * @exports module:catke/popTips
-     * @type {Object} 
+     * @type {Object}
      * @example
      *     require(['catke'], function(catke){
      *         catke.popTips.success('成功');
      *         catke.popTips.error('error');
      *     });
      */
-    var PopTips = (function () {
+    var popTips = function(){
 
-        var _instance;
+        var $tips, tm;
 
-        function init() {
+        var build = function (status, content, delay, callback) {
 
-            var $tips, tm;
-
-            function build(status, content, delay, callback) {
-
-                if (tm) { clearTimeout(tm); }
-
-                if ($.isFunction(delay)) { callback = delay; delay = 3000; }
-
-                callback = callback || function(){};
-                delay = delay || 3000;
-
-                if ($tips) { $tips.stop().remove(); }
-
-                $tips = $(getHtml(status, content))
-                        .appendTo(document.body).hide();
-
-                $tips.css({ marginLeft: -($tips.width() / 2), marginTop: -($tips.height() / 2) }).fadeIn('fase', function () {
-                    tm = setTimeout(function () {
-                        $tips.stop().remove();
-                        callback();
-                    }, delay);
-                });
+            if (tm) {
+                clearTimeout(tm);
             }
 
-            function getHtml(status, content) {
-                var html = [];
-                switch (status) {
-                    case "success":
-                        html.push('<div class="ck-pop-tips success"><span class="cpwicon-check"></span>&nbsp;<span>' + content + '</span></div>');
-                        break;
-                    case "error":
-                        html.push('<div class="ck-pop-tips error"><span class="cpwicon-cross"></span>&nbsp;<span>' + content + '</span></div>');
-                        break;
-                    case "warning":
-                        html.push('<div class="ck-pop-tips warning"><span class="cpwicon-warning"></span>&nbsp;<span>' + content + '</span></div>');
-                        break;
-                }
-                return html.join('');
+            if ($.isFunction(delay)) {
+                callback = delay;
+                delay = 3000;
             }
 
-            return {
-                success: function (content, callback, delay) {
-                    build("success", content, callback, delay);
-                },
-                error: function (content, callback, delay) {
-                    build("error", content, callback, delay);
-                },
-                warning: function (content, callback, delay) {
-                    build("warning", content, callback, delay);
-                }
-            };
-        }
+            callback = callback || function() {};
+            delay = delay || 3000;
+
+            if ($tips) {
+                $tips.stop().remove();
+            }
+
+            $tips = $(getHtml(status, content))
+                .appendTo(document.body).hide();
+
+            $tips.css({
+                marginLeft: -($tips.width() / 2),
+                marginTop: -($tips.height() / 2)
+            }).fadeIn('fase', function() {
+                tm = setTimeout(function() {
+                    $tips.stop().remove();
+                    callback();
+                }, delay);
+            });
+        };
+
+        var getHtml = function (status, content) {
+            var html = [];
+            switch (status) {
+                case "success":
+                    html.push('<div class="ck-poptips success"><i class="nicon nicon-success"></i>' + content + '</div>');
+                    break;
+                case "error":
+                    html.push('<div class="ck-poptips error"><i class="nicon nicon-error"></i>' + content + '</div>');
+                    break;
+                case "warning":
+                    html.push('<div class="ck-poptips warning"><i class="nicon nicon-warning"></i>' + content + '</div>');
+                    break;
+            }
+            return html.join('');
+        };
 
         return {
-            getInstance: function () {
-                if (!_instance) {
-                    _instance = init();
-                }
-                return _instance;
+            success: function(content, callback, delay) {
+                build("success", content, callback, delay);
+            },
+            error: function(content, callback, delay) {
+                build("error", content, callback, delay);
+            },
+            warning: function(content, callback, delay) {
+                build("warning", content, callback, delay);
             }
         };
-    })();
+    };
 
-    return PopTips.getInstance();
+    return popTips();
 });
+
 /**
  * 任务队列
  * @module catke/task
@@ -742,6 +740,7 @@ define('catke/validate',
     	var self = this;
 
     	$.each(this.fields, function(k, $el){
+    		self.hideError($el);
        		var name = $el.attr('name');
     		var value = data[name];
     		var resData = check(value, self.rules[name]);
@@ -774,7 +773,7 @@ define('catke/validate',
     			//tipClass: 'danger',
     			placement: 'bottom',
     			trigger: 'manual',
-    			content: msg
+    			content: '<i class="nicon nicon-warning"></i> ' + msg
     		});
     		tip.$tips.css({
     			zIndex: self.options.tipZindex
@@ -782,7 +781,7 @@ define('catke/validate',
     		$el.data('ckTip', tip);
     	}
     	else{
-    		tip.setContent(msg);
+    		tip.setContent('<i class="nicon nicon-warning"></i> ' + msg);
     	}
     	tip.show();
     };
@@ -842,7 +841,6 @@ define('catke/validate',
 	 */
 	Validate.required = function() {
 	    var rule = function(x) {
-	    	
 	        return $.trim(String(x || '')).length > 0;
 	    };
 	    rule.type = 'required';
@@ -855,10 +853,16 @@ define('catke/validate',
 	 */
 	$.each(_rules, function(k, v) {
 	    Validate[v] = function() {
-	        var args = 1 <= arguments.length ? [].slice.call(arguments, 0) : [];
+	    	var total = arguments.length;
+	        var args = 1 <= total ? [].slice.call(arguments, 0) : [];
 
-	        var rule = function(x) {	
-	            args.splice(0, 0, x);
+	        var rule = function(x) {
+	        	if(total === args.length){
+		            args.splice(0, 0, x);
+	        	}	
+	           	else{
+	           		args[0] = x;
+	           	} 
 	            //console.log(validator, v);
 	            return validator[v].apply(null, args);
 	        };

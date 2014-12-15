@@ -144,6 +144,7 @@ define('catke/validate',
     	var self = this;
 
     	$.each(this.fields, function(k, $el){
+    		self.hideError($el);
        		var name = $el.attr('name');
     		var value = data[name];
     		var resData = check(value, self.rules[name]);
@@ -176,7 +177,7 @@ define('catke/validate',
     			//tipClass: 'danger',
     			placement: 'bottom',
     			trigger: 'manual',
-    			content: msg
+    			content: '<i class="nicon nicon-warning"></i> ' + msg
     		});
     		tip.$tips.css({
     			zIndex: self.options.tipZindex
@@ -184,7 +185,7 @@ define('catke/validate',
     		$el.data('ckTip', tip);
     	}
     	else{
-    		tip.setContent(msg);
+    		tip.setContent('<i class="nicon nicon-warning"></i> ' + msg);
     	}
     	tip.show();
     };
@@ -244,7 +245,6 @@ define('catke/validate',
 	 */
 	Validate.required = function() {
 	    var rule = function(x) {
-	    	
 	        return $.trim(String(x || '')).length > 0;
 	    };
 	    rule.type = 'required';
@@ -257,10 +257,16 @@ define('catke/validate',
 	 */
 	$.each(_rules, function(k, v) {
 	    Validate[v] = function() {
-	        var args = 1 <= arguments.length ? [].slice.call(arguments, 0) : [];
+	    	var total = arguments.length;
+	        var args = 1 <= total ? [].slice.call(arguments, 0) : [];
 
-	        var rule = function(x) {	
-	            args.splice(0, 0, x);
+	        var rule = function(x) {
+	        	if(total === args.length){
+		            args.splice(0, 0, x);
+	        	}	
+	           	else{
+	           		args[0] = x;
+	           	} 
 	            //console.log(validator, v);
 	            return validator[v].apply(null, args);
 	        };

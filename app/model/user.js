@@ -4,7 +4,7 @@ var mongoose = require('mongoose');
 var validator = require('validator');
 var crypto = require('crypto');
 var _ = require('lodash');
-
+var mongooseExt = require('../lib/mongooseExt');
 var Schema = mongoose.Schema;
 
 /**
@@ -114,5 +114,7 @@ UserSchema.methods.setRoles = function(roles) {
 
     return this;
 };
+
+mongooseExt(UserSchema);
 
 mongoose.model('User', UserSchema);

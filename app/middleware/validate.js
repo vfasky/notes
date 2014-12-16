@@ -114,7 +114,7 @@ var check = function(value, rules) {
  * });
  */
 module.exports = exports = function(rules) {
-    return function*(next) {
+    return function *(next) {
         var self = this;
         var keys = Object.keys(rules);
         var body = this.request.body || {};

@@ -54,7 +54,7 @@ app.use(bodyParser());
 /**
  * 错误处理
  */
-app.use(function*(next) {
+app.use(function *(next) {
     try {
         yield next;
     } catch (err) {

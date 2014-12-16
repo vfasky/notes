@@ -1,7 +1,7 @@
 "use strict";
 
 var mongoose = require('mongoose');
-
+var mongooseExt = require('../lib/mongooseExt');
 var Schema = mongoose.Schema;
 
 /**
@@ -45,4 +45,5 @@ var BookSchema = new Schema({
     }
 });
 
+mongooseExt(BookSchema);
 mongoose.model('Book', BookSchema);

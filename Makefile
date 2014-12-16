@@ -1,5 +1,6 @@
 TESTS = test/*.test.js \
-        test/model/*.test.js
+        test/model/*.test.js \
+        test/route/*.test.js
 
 dev:
 	@./node_modules/.bin/node-dev \

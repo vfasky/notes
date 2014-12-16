@@ -2,6 +2,7 @@
 
 var mongoose = require('mongoose');
 var validator = require('validator');
+var mongooseExt = require('../lib/mongooseExt');
 
 var Schema = mongoose.Schema;
 
@@ -27,5 +28,6 @@ var RoleSchema = new Schema({
         trim: true
     }
 });
+mongooseExt(RoleSchema);
 
 mongoose.model('Role', RoleSchema);

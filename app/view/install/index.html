@@ -45,8 +45,9 @@
 				if(form.valid()){
 					catke.http.post('/install', form.getData())
 					          .done(function(){
-					          	catke.popTips.success('安装成功，正在为您跳转');
-					          	window.location.href = '/';
+					          	catke.popTips.success('安装成功，正在为您跳转 ...', function(){
+						          	window.location.href = '/';
+					          	}, 1000);
 					          });
 				}
 				return false;

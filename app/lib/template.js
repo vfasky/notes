@@ -6,6 +6,28 @@ var _ = require('lodash');
 var config = require('../../config');
 var fs = require('fs');
 var path = require('path');
+var Remarkable = require('remarkable');
+var hljs = require('highlight.js');
+
+/**
+ * markdown 设置
+ * @type {Remarkable}
+ */
+var remarkable = new Remarkable('full', {
+    linkify: true,
+    breaks: true,
+    typographer: true,
+    langPrefix: 'hljs ',
+    highlight: function(str, lang) {
+        if (lang && hljs.getLanguage(lang)) {
+            try {
+                return hljs.highlight(lang, str).value;
+            } catch (err) {}
+        }
+
+        return ''; // use external default escaping
+    }
+});
 
 /**
  * default render options
@@ -23,7 +45,7 @@ var _time = (new Date()).getTime();
 var _hash = JSON.parse(fs.readFileSync(
     path.join(__dirname, '../../build/hash.json')
 ), 'utf8');
- 
+
 
 /**
  * 模板引擎
@@ -48,22 +70,28 @@ exports = module.exports = function(app, settings) {
 
     var template = nunjucks.configure(settings.templatePath, settings);
 
+    //渲染markdown
+    template.addFilter('markdown', function(str) {
+        return '<div class="markdown">' + remarkable.render(str) + '</div>';
+    });
+
+    //静态文件前缀
+    template.addFilter('staticUrl', function(uri) {
+        var hash = _hash[uri] || _time;
+
+        if (null === config.staticHost) {
+            return '/' + uri + '?' + hash;
+        }
+        return config.staticHost + uri + '?' + hash;
+    });
+
     /**
      * locals
      * @type {Object}
      */
     var locals = {
         config: require('../../config'),
-        ENV: env,
-        //静态文件地址
-        staticUrl: function(uri){
-            var hash = _hash[uri] || _time;
-
-            if(null === config.staticHost){
-                return '/' + uri + '?v=' + hash;
-            }
-            return config.staticHost + uri + '?v=' + hash;
-        }
+        ENV: env
     };
 
     /**

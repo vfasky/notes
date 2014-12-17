@@ -10,18 +10,13 @@
     <meta name="description" content="{% block description %}{% endblock %}" />
 
     <title>{% block title %}{% endblock %}</title>
-
-    <link rel="stylesheet" href="{{staticUrl('css/style.css')}}">
+    <link rel="stylesheet" href="//dn-staticfile.qbox.me/highlight.js/8.3/styles/solarized_light.min.css">
+    <link rel="stylesheet" href="{{'css/style.css' | staticUrl}}">
     {% block css %}{% endblock %}
-
-    <!--[if lt IE 9]>
-    <script src="//cdnjscn.b0.upaiyun.com/libs/html5shiv/3.7/html5shiv.min.js"></script>
-    <script src="//cdnjscn.b0.upaiyun.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]--> 
      
 </head>
 <body class="{% block bodyClass %}{% endblock %}">
-    <!--[if lt IE 8]>
+    <!--[if lt IE 9]>
     <div class="alert error">您的浏览器版本<strong>很旧很旧</strong>，为了正常地访问网站，请升级您的浏览器 <a target="_blank" href="http://browsehappy.com">立即升级</a></div>
     <![endif]-->
 
@@ -32,7 +27,7 @@
     {% block foot %}{% endblock %}
     
     <script src="//cdnjscn.b0.upaiyun.com/libs/require.js/2.1.14/require.min.js"></script>
-    <script src="{{staticUrl('js/config.js')}}"></script>
+    <script src="{{'js/config.js' | staticUrl}}"></script>
     {% block js %}{% endblock %}
 </body>
 </html>

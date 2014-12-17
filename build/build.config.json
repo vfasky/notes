@@ -2,6 +2,7 @@
 	"function": [
 		"catke/util",
 		"catke/placeholder",
-		"catke/http"
+		"catke/http",
+		"catke/popTips"
 	]
 }

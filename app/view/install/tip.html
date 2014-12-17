@@ -1,0 +1,29 @@
+{% extends "_layout/default.html" %}
+
+{% block content %}
+	<div class="content install">
+		<h3>安装 Note.CatKe</h3>
+		<div class="sub">
+			这是一个笔记 App， 可以帮您有效地管理笔记。
+		</div>
+		
+		<br>
+		
+{{'
+### Hi, 您需要创建配置文件
+
+打开 `config` 文件夹， 新建 `user.json`， 并添加以下内容
+
+```js
+{
+	"superUserEmail": "your email"
+}
+```
+
+' | markdown | safe }}
+		
+		<br>
+		
+		<a href="/install" class="button">我已创建配置文件,并重启应用</a>
+	</div>
+{% endblock %}

@@ -889,7 +889,7 @@ define("catke", ["catke/http", "catke/placeholder", "catke/popTips", "catke/task
     return {
         "http" : _http,
         "placeholder" : _placeholder,
-        "PopTips" : _popTips,
+        "popTips" : _popTips,
         "Task" : _task,
         "ToolTips" : _toolTips,
         "util" : _util,

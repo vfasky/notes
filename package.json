@@ -32,13 +32,15 @@
     "koa-router": "^3.7.0",
     "koa-static": "^1.4.7",
     "lodash": "^2.4.1",
-    "mocha": "^2.0.1",
     "mongoose": "^3.8.20",
-    "node-dev": "^2.6.0",
     "nunjucks": "^1.1.0",
     "remarkable": "^1.5.0",
     "segment": "0.0.5",
-    "supertest": "^0.15.0",
     "validator": "^3.22.2"
+  },
+  "devDependencies": {
+    "node-dev": "^2.6.0",
+    "supertest": "^0.15.0",
+    "mocha": "^2.0.1"
   }
 }

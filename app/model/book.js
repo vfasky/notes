@@ -8,6 +8,7 @@ var Schema = mongoose.Schema;
  * 笔记本模型
  * @author vfasky <vfasky@gmail.com>
  * @module app/model/BookSchema
+ * @type {Schema}
  */
 var BookSchema = new Schema({
     //关联用户

@@ -19,7 +19,7 @@ make install & make test
 
 
 
-## 总署
+## 部署
 
 ### 安装
 

@@ -14,7 +14,7 @@
 
 打开 `config` 文件夹， 新建 `user.json`， 并添加以下内容
 
-```js
+```json
 {
 	"superUserEmail": "your email"
 }
@@ -26,4 +26,14 @@
 		
 		<a href="/install" class="button">我已创建配置文件,并重启应用</a>
 	</div>
+{% endblock %}
+
+{% block js %}
+<script>
+	require(['catke', 'jquery'], function(catke, $){
+		"use strict";
+		
+		catke.highlight($('pre'));	
+	});
+</script>
 {% endblock %}

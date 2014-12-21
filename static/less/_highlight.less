@@ -1,0 +1,54 @@
+.highlight {
+    
+    text-align: left;
+	padding: 12px 0;
+	overflow: auto;
+	background-color: #fdf6e3;
+	border-radius: 3px;
+
+
+    table {
+        margin: 0;
+        width: auto;
+        border: none;
+        border-collapse: collapse;
+        border-spacing: 0;
+        display: table;
+    }
+
+    tbody {
+        display: table-row-group;
+        vertical-align: middle;
+        border-color: inherit;
+    }
+
+    tr {
+		border-bottom: none;
+		display: table-row;
+		vertical-align: inherit;
+		border-color: inherit;
+	}
+
+	pre{
+		margin: 0;
+		padding: 0;
+	}
+
+	.line{
+		display: block;
+		height: 28px;
+		line-height: 28px;
+		white-space: pre;
+		word-wrap: normal;
+	}
+
+	.gutter{ 
+		min-width: 40px;
+		padding-right: 12px;
+
+		.line{
+			text-align: right;
+			color: @fontLightColor;
+		}
+	}
+}

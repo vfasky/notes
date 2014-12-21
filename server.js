@@ -24,6 +24,7 @@ var port = process.env.PORT || 3001;
  * @type {Array}
  */
 app.keys = config.keys;
+app.proxy = true;
 
 /**
  * 静态文件

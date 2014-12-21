@@ -3,6 +3,8 @@
 		"catke/util",
 		"catke/placeholder",
 		"catke/http",
-		"catke/popTips"
+		"catke/popTips",
+		"catke/highlight",
+		"catke/classExt"
 	]
 }

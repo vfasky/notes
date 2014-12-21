@@ -1,4 +1,205 @@
 /**
+ * catke 扩展
+ * @date 2014-11-10 14:28:50
+ * @author vfasky <vfasky@gmail.com>
+ * @version $Id$
+ */
+define('catke/classExt', ['jquery'], function($) {
+    "use strict";
+    /**
+     * @exports module:catke/classExt
+     * @author vfasky <vfasky@gmail.com>
+     * @type {Object}
+     */
+    var exports = {};
+
+    var Ctor = function() {};
+
+    /**
+     * mix
+     * @param  {Object} r  target
+     * @param  {Object} s  soure
+     * @param  {undefined} wl
+     * @return {Void}
+     */
+    exports.mix = function(r, s, wl) {
+        // Copy "all" properties including inherited ones.
+        for (var p in s) {
+            if (s.hasOwnProperty(p)) {
+                if (wl && indexOf(wl, p) === -1) continue;
+                // 在 iPhone 1 代等设备的 Safari 中，prototype 也会被枚举出来，需排除
+                if (p !== "prototype") {
+                    r[p] = s[p];
+                }
+            }
+        }
+    };
+
+    /**
+     * class 事件
+     * @constructor
+     * @author vfasky <vfasky@gmail.com>
+     * @param {Object} event 事件定义
+     */
+    exports.ClassEvent = function(event) {
+        this.event = event || {};
+    };
+
+    /**
+     * 注册事件
+     * @param {String} name 事件名
+     */
+    exports.ClassEvent.prototype.addEvent = function(name) {
+        this.event = this.event || {};
+        if (false === $.isArray(this.event[name])) {
+            this.event[name] = [];
+        }
+    };
+
+    /**
+     * 监听事件
+     * @param  {String} name 事件名
+     * @param  {Function} callback 回调
+     * @return {module:cepin/classExt.ClassEvent}
+     */
+    exports.ClassEvent.prototype.on = function(name, callback) {
+        if ($.isArray(this.event[name])) {
+            this.event[name].push(callback);
+        }
+        return this;
+    };
+
+    /**
+     * 移除监听事件
+     * @param  {String} name 事件名
+     * @return {module:cepin/classExt.ClassEvent}
+     */
+    exports.ClassEvent.prototype.off = function(name) {
+        if ($.isArray(this.event[name])) {
+            this.event[name] = [];
+        }
+        return this;
+    };
+
+    /**
+     * 触发事件
+     * @param  {String} name 事件名
+     * @param  {Mixed} e 传递的参数
+     * @return {Boolean}
+     */
+    exports.ClassEvent.prototype.callEvent = function(name, e) {
+        var type;
+        $.each(this.event[name] || [], function(k, v) {
+            type = v(e);
+            return type;
+        });
+        return type;
+    };
+
+    /**
+     * 继续原型链
+     * @param  {Object} proto prototype
+     * @return {Object}
+     */
+    exports.extendProto = Object.__proto__ ? function(proto) {
+        return {
+            __proto__: proto
+        };
+    } : function(proto) {
+        Ctor.prototype = proto;
+        return new Ctor();
+    };
+
+    /**
+     * 事件扩展
+     * @author vfasky <vfasky@gmail.com>
+     * @param  {Object} self  当前 class this 指针
+     * @param  {Object} Cls   当前 class 未实例对象
+     * @param  {Object} event 事件定义
+     * @return {Void}
+     */
+    exports.event = function(self, Cls, event) {
+        self.event = event || {};
+
+        exports.mix(Cls.prototype, exports.ClassEvent.prototype);
+    };
+
+    return exports;
+});
+
+/**
+ * doc
+ * @module catke/highlight
+ * @author vfasky <vfasky@gmail.com>
+ */
+define('catke/highlight', ['jquery', 'highlight'], function($, hljs) {
+    "use strict";
+
+    var alias = {
+        js: 'javascript',
+        jscript: 'javascript',
+        html: 'xml',
+        htm: 'xml',
+        coffee: 'coffeescript',
+        'coffee-script': 'coffeescript',
+        yml: 'yaml',
+        pl: 'perl',
+        ru: 'ruby',
+        rb: 'ruby',
+        csharp: 'cs'
+    };
+
+    return function($el) {
+        var $code = $el.find('> code');
+        var lang = ($code.attr('class') || '').replace('hljs ', '');
+        var compiled;
+        var str = $code.html();
+
+        lang = String(lang).toLowerCase() || 'plain';
+
+        if (alias[lang]) {
+            lang = alias[lang];
+        }
+
+        if (hljs.getLanguage(lang)) {
+            try {
+                compiled = hljs.highlight(lang, str).value;
+            } catch (e) {
+                compiled = hljs.highlightAuto(str).value;
+            }
+        }
+        else{
+        	compiled = hljs.highlightAuto(str).value;
+        }
+
+        var lines = compiled.split('\n'),
+            numbers = '',
+            content = '',
+            firstLine = 1;
+
+        if(!lines[lines.length - 1]){
+        	lines.pop();
+        }
+
+        $.each(lines, function(i, item) {
+            numbers += '<div class="line">' + (i + firstLine) + '</div>';
+            content += '<div class="line">' + item + '</div>';
+        });
+
+        var result = '<figure class="highlight' + (lang ? ' ' + lang : '') + '">';
+
+        result += '<table><tr>' +
+            '<td class="gutter"><pre>' + numbers + '</pre></td>' +
+            '<td class="code"><pre>' + content + '</pre></td>' +
+            '</tr></table>';
+            
+        result += '</figure>';
+
+        $el.after(result).remove();
+    };
+});
+
+/**
  * 封装http请求
  * @module catke/http
  * @author vfasky <vfasky@gmail.com>
@@ -83,6 +284,47 @@ define('catke/http', ['jquery', 'catke/popTips'], function($, popTips) {
     return exports;
 });
 
+/**
+ * loading
+ * @date 2014-11-11 16:33:41
+ * @author vfasky <vfasky@gmail.com>
+ * @version $Id$
+ */
+
+define('catke/loading', ['jquery'], function($){
+    "use strict";
+    
+    var tpl = '<div class="ck-tooltips success"> <span> </span> </div>';
+
+    var Loading = function(config){
+        this.config = $.extend({
+            tip: 'loading ...'
+        }, config || {});
+
+        this.$el = $(tpl).hide();
+        this.$el.find('span').html(this.config.tip);
+
+        this.$el.appendTo($('body'));
+        this.$el.css({ marginLeft: -(this.$el.width() / 2), marginTop: -(this.$el.height() / 2) });
+    };
+
+    Loading.prototype.show = function(){
+        this.$el.show();
+        return this;
+    };
+
+    Loading.prototype.hide = function(){
+        this.$el.hide();
+        return this;
+    };
+
+    Loading.prototype.remove = function(){
+        this.$el.remove();
+        return this;
+    };
+
+    return Loading;
+});
 /**
  * placeholder
  * @date 2014-11-10 15:22:41
@@ -885,9 +1127,12 @@ define('catke/validate',
     return Validate;
 });
 ;
-define("catke", ["catke/http", "catke/placeholder", "catke/popTips", "catke/task", "catke/toolTips", "catke/util", "catke/validate"], function(_http, _placeholder, _popTips, _task, _toolTips, _util, _validate){
+define("catke", ["catke/classExt", "catke/highlight", "catke/http", "catke/loading", "catke/placeholder", "catke/popTips", "catke/task", "catke/toolTips", "catke/util", "catke/validate"], function(_classExt, _highlight, _http, _loading, _placeholder, _popTips, _task, _toolTips, _util, _validate){
     return {
+        "classExt" : _classExt,
+        "highlight" : _highlight,
         "http" : _http,
+        "Loading" : _loading,
         "placeholder" : _placeholder,
         "popTips" : _popTips,
         "Task" : _task,

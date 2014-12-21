@@ -17,16 +17,7 @@ var remarkable = new Remarkable('full', {
     linkify: true,
     breaks: true,
     typographer: true,
-    langPrefix: 'hljs ',
-    highlight: function(str, lang) {
-        if (lang && hljs.getLanguage(lang)) {
-            try {
-                return hljs.highlight(lang, str).value;
-            } catch (err) {}
-        }
-
-        return ''; // use external default escaping
-    }
+    langPrefix: 'hljs '
 });
 
 /**

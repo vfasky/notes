@@ -9,7 +9,7 @@ var assert = require('assert');
 
 describe('api book', function() {
     var user, roles = [],
-        password, book;
+        password, book, bookId;
 
     before(function(done) {
         var role = new model.Role({
@@ -81,12 +81,80 @@ describe('api book', function() {
             });
     });
 
+    it('add books', function(done) {
+        noteApp.post('/api/v1/book')
+            .send({
+                title: 'test1'
+            })
+            .expect(200, function(err, res) {
+                if (err) {
+                    return done(err);
+                }
+                var data = res.body;
+
+                if (data.state !== true) {
+                    return done(data.error);
+                }
+
+                assert.equal('test1', data.book.title);
+
+                bookId = data.book._id;
+
+                done();
+            });
+    });
+
+    it('edit books', function(done) {
+        noteApp.put('/api/v1/book')
+            .send({
+                title: 'test2',
+                id: bookId
+            })
+            .expect(200, function(err, res) {
+                if (err) {
+                    return done(err);
+                }
+                var data = res.body;
+
+                if (data.state !== true) {
+                    return done(data.error);
+                }
+
+                assert.equal('test2', data.book.title);
+
+                done();
+            });
+    });
+
+    it('del books', function(done) {
+        noteApp.del('/api/v1/book')
+            .send({
+                id: bookId
+            })
+            .expect(/true/)
+            .expect(200, done);
+    });
+
+
+    after(function(done) {
+        model.Book.find({
+            _user: user._id
+        }, function(err, books) {
+            if (err) {
+                return done(err);
+            }
+            books.forEach(function(book) {
+                book.remove();
+            });
+            done();
+        });
+    });
 
     after(function(done) {
         roles.forEach(function(v) {
             v.remove();
         });
-        book.remove();
+
         user.remove(done);
     });
 

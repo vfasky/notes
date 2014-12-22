@@ -18,7 +18,7 @@
     "staticHost": null,
 
     "//": "网站管理员邮箱",
-    "superUserEmail": "",
+    "superUserEmail": "site@mail.com",
 
     "//": "模板路径",
     "templatePath": "app/view"

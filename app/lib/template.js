@@ -7,7 +7,6 @@ var config = require('../../config');
 var fs = require('fs');
 var path = require('path');
 var Remarkable = require('remarkable');
-var hljs = require('highlight.js');
 
 /**
  * markdown 设置

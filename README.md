@@ -1,8 +1,8 @@
 一个写笔记的web应用
 =============================
 
-[![Build Status](https://travis-ci.org/vfasky/notes.svg)](https://travis-ci.org/vfasky/notes) 
-[![Coverage Status](https://coveralls.io/repos/vfasky/notes/badge.png?branch=master)](https://coveralls.io/r/vfasky/notes?branch=master)
+[![Build Status](https://img.shields.io/travis/vfasky/notes.svg?style=flat-square)](https://travis-ci.org/vfasky/notes) 
+[![Coverage Status](https://img.shields.io/coveralls/vfasky/notes.svg?style=flat-square)](https://coveralls.io/r/vfasky/notes?branch=master)
 
 使用 koa
 

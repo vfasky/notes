@@ -1,6 +1,7 @@
 TESTS = test/*.test.js \
         test/model/*.test.js \
-        test/route/*.test.js
+        test/route/*.test.js \
+        test/api/v1/*.test.js
 
 MOCHA_REPORTER = spec
 

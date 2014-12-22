@@ -135,6 +135,10 @@ module.exports = exports = function(rules) {
             }
         });
 
+        if (this.validateError) {
+            this.throw(200, this.validateError);
+        }
+
         yield * next;
     };
 };

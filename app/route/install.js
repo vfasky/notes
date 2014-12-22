@@ -42,10 +42,7 @@ router.post('/install', validate({
     name: [validate.isAlphanumeric, validate.isLength(3, 15)],
     password: validate.isLength(6, 32)
 }), function*() {
-    if (this.validateError) {
-        this.throw(200, this.validateError);
-    }
-
+    
     var user =
         yield model.User.findOne({
             email: config.superUserEmail

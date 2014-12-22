@@ -4,10 +4,9 @@
  * 用户
  * @module app/route/api/v1/usr
  * @author vfasky <vfasky@gmail.com>
- */	
+ */
 var Router = require('koa-router');
 var validate = require('../../../middleware/validate');
-var timeout = require('../../../middleware/timeout');
 var model = require('../../../model');
 var router = new Router();
 var util = require('../../../lib/util');
@@ -21,44 +20,50 @@ var _ = require('lodash');
  * @param  {String} password 密码
  */
 router.post('/api/v1/user.login', validate({
-	email: [validate.required, validate.isEmail],
-	password: validate.isLength(6, 32)
-}), timeout(1500), function*() {
-	var data = this.request.body;
+    email: [validate.required, validate.isEmail],
+    password: validate.isLength(6, 32)
+}), function*() {
 
-	var user = yield model.User.findOne({
-		email: data.email
-	}).exec();
+    yield util.sleep(1000);
 
-	if(null === user){
-		this.throw(200, '账号不存在');
-	}
+    var data = this.request.body;
 
-	var match = yield util.bcompare(data.password, user.password);
-	if(!match){
-		this.throw(200, '密码错误');
-	}
+    var user =
+        yield model.User.findOne({
+            email: data.email
+        }).exec();
 
-	var roles = yield user.getRoles();
+    if (null === user) {
+        this.throw(200, '账号不存在');
+    }
 
-	var session = {
-		userId: user._id,
-		email: user.email,
-		name: user.name,
-		location: user.location,
-		avatarUrl: user.avatarUrl,
-		roles: []
-	};
+    var match =
+        yield util.bcompare(data.password, user.password);
+    if (!match) {
+        this.throw(200, '密码错误');
+    }
 
-	_.each(roles, function(r){
-		session.roles.push(r.code);
-	});
+    var roles =
+        yield user.getRoles();
 
-	this.session = session;
+    var session = {
+        userId: user._id,
+        email: user.email,
+        name: user.name,
+        location: user.location,
+        avatarUrl: user.avatarUrl,
+        roles: []
+    };
 
-	this.body = {
-		state: true
-	};
+    _.each(roles, function(r) {
+        session.roles.push(r.code);
+    });
+
+    this.session = session;
+
+    this.body = {
+        state: true
+    };
 });
 
 module.exports = router;

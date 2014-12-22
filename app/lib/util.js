@@ -9,10 +9,10 @@ var bcrypt = require('bcrypt');
  * @param  {String} str 要加密的代码
  * @return {Function}
  */
-exports.bhash = function (str) {
-	return function(done){
-		bcrypt.hash(str, 10, done);	
-	};
+exports.bhash = function(str) {
+    return function(done) {
+        bcrypt.hash(str, 10, done);
+    };
 };
 
 /**
@@ -23,8 +23,16 @@ exports.bhash = function (str) {
  * @param  {String} hash 加密后的代码
  * @return {Function}
  */
-exports.bcompare = function (str, hash) {
-	return function(done){
-		bcrypt.compare(str, hash, done);
-	};
+exports.bcompare = function(str, hash) {
+    return function(done) {
+        bcrypt.compare(str, hash, done);
+    };
+};
+
+exports.sleep = function(time) {
+    return function(done) {
+        setTimeout(function() {
+            done(null);
+        }, time);
+    };
 };

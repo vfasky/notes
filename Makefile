@@ -15,12 +15,6 @@ test:
 install:
 	@npm install --registry=http://r.cnpmjs.org
 
-test-travis:
-	@npm install 
-	@NODE_ENV=test ./node_modules/.bin/mocha \
-	--harmony-generators \
-	$(TESTS)
-
 test-cov cov:
 	@npm install 
 	@NODE_ENV=test node --harmony-generators \

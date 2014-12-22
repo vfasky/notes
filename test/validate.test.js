@@ -34,13 +34,13 @@ describe('validate', function() {
             validate.required, [validate.isEmail, 'Please fill a valid email address']
         ]
     }), function*() {
-        this.body = this.validateError;
+        this.body = 'ok?';
     });
 
     app.post('/test/validate/byteLength', validate({
         test: validate.isByteLength(3, 6),
     }), function*() {
-        this.body = this.validateError;
+        this.body = 'ok?';
     });
 
 

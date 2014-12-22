@@ -1,0 +1,9 @@
+language: node_js
+node_js:
+ - '0.11'
+
+services:
+ - mongodb
+ - memcached
+
+script: make test-cov

@@ -15,4 +15,10 @@ test:
 install:
 	@npm install --registry=http://r.cnpmjs.org
 
+test-cov cov:
+	@npm install 
+	@NODE_ENV=test ./node_modules/.bin/mocha \
+	--harmony \
+	$(TESTS)
+
 .PHONY: test

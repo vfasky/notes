@@ -2,6 +2,8 @@ TESTS = test/*.test.js \
         test/model/*.test.js \
         test/route/*.test.js
 
+MOCHA_REPORTER = spec
+
 dev:
 	@./node_modules/.bin/node-dev \
 	--harmony \
@@ -18,10 +20,10 @@ install:
 test-cov cov:
 	@npm install 
 	@NODE_ENV=test node --harmony-generators \
-	node_modules/.bin/istanbul cover \
+	node_modules/.bin/istanbul cover --preserve-comments \
 	./node_modules/.bin/_mocha \
-	--report lcovonly \
-	-- -u exports \
+	-- \
+	--reporter $(MOCHA_REPORTER) \
 	$(TESTS) \
 	--bail
 

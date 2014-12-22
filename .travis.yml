@@ -6,4 +6,4 @@ services:
  - mongodb
  - memcached
 
-script: make test-cov
+script: make test-travis

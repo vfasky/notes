@@ -2,7 +2,7 @@
 
 /**
  * 用户
- * @module app/route/api/v1/usr
+ * @module app/route/api/v1/user
  * @author vfasky <vfasky@gmail.com>
  */
 var Router = require('koa-router');
@@ -111,8 +111,8 @@ router.put('/api/v1/user', validate({
     var roles =
         yield user.getRoles();
 
-    var session = {
-        userId: user._id,
+    var sessionUser = {
+        _id: user._id,
         email: user.email,
         name: user.name,
         location: user.location,
@@ -121,10 +121,10 @@ router.put('/api/v1/user', validate({
     };
 
     _.each(roles, function(r) {
-        session.roles.push(r.code);
+        sessionUser.roles.push(r.code);
     });
 
-    this.session = session;
+    this.session.user = sessionUser;
 
     this.body = {
         state: true

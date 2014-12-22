@@ -82,7 +82,9 @@ app.use(function *(next) {
  */
 app.use(require('./app/route').middleware());
 app.use(require('./app/route/install').middleware());
+
 app.use(require('./app/route/api/v1/user').middleware());
+app.use(require('./app/route/api/v1/book').middleware());
 
 
 /**

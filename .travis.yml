@@ -7,3 +7,4 @@ services:
  - memcached
 
 script: make test-travis
+after_success: cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js

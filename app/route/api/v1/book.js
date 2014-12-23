@@ -39,7 +39,7 @@ router.post('/api/v1/book', acl.allow('user'), validate({
     var data = this.request.body;
 
     var book =
-        yield model.Book({
+        yield new model.Book({
             _user: user._id,
             title: data.title
         }).saveAsync();

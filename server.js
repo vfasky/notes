@@ -85,6 +85,7 @@ app.use(require('./app/route/install').middleware());
 
 app.use(require('./app/route/api/v1/user').middleware());
 app.use(require('./app/route/api/v1/book').middleware());
+app.use(require('./app/route/api/v1/note').middleware());
 
 
 /**

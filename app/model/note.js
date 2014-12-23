@@ -4,7 +4,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var _ = require('lodash');
 var segment = require('../lib/segment');
-
+var mongooseExt = require('../lib/mongooseExt');
 /**
  * 笔记模型
  * @author vfasky <vfasky@gmail.com>
@@ -169,4 +169,5 @@ NoteSchema.methods.saveKeywords = function(keywords) {
     };
 };
 
+mongooseExt(NoteSchema);
 mongoose.model('Note', NoteSchema);

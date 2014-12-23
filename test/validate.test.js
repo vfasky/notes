@@ -9,23 +9,29 @@ describe('validate', function() {
 
     app.use(router(app));
 
+    app.get('/test/validate/required', validate({
+        test: validate.required
+    }), function*() {
+        this.body = 'ok?';
+    });
+
     app.post('/test/validate/required', validate({
         test: validate.required
     }), function*() {
-        this.body = this.validateError;
+        this.body = 'ok?';
     });
 
     app.del('/test/validate/requiredMsg', validate({
         test: [validate.required, 'test Not None']
     }), function*() {
-        this.body = this.validateError;
+        this.body = 'ok?';
     });
 
     app.put('/test/validate/email', validate({
         test: validate.required,
         email: [validate.required, validate.isEmail()]
     }), function*() {
-        this.body = this.validateError;
+        this.body = 'ok?';
     });
 
     app.post('/test/validate/emailMsg', validate({
@@ -36,6 +42,16 @@ describe('validate', function() {
     }), function*() {
         this.body = 'ok?';
     });
+
+    app.get('/test/validate/emailMsg', validate({
+        test: validate.required,
+        email: [
+            validate.required, [validate.isEmail, 'Please fill a valid email address']
+        ]
+    }), function*() {
+        this.body = 'ok?';
+    });
+
 
     app.post('/test/validate/byteLength', validate({
         test: validate.isByteLength(3, 6),
@@ -54,6 +70,13 @@ describe('validate', function() {
             .expect(/test Validation fails/)
             .expect(200, done);
     });
+
+    it('required get', function(done) {
+        noteApp.get('/test/validate/required?t=1')
+            .expect(/test Validation fails/)
+            .expect(200, done);
+    });
+
 
     it('required message', function(done) {
         noteApp.del('/test/validate/requiredMsg')
@@ -80,6 +103,12 @@ describe('validate', function() {
                 test: 'ok',
                 email: 'no email'
             })
+            .expect(/Please fill a valid email address/)
+            .expect(200, done);
+    });
+
+    it('email message get', function(done) {
+        noteApp.get('/test/validate/emailMsg?test=ok&email=noemail')
             .expect(/Please fill a valid email address/)
             .expect(200, done);
     });

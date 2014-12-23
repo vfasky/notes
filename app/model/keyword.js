@@ -1,7 +1,7 @@
 "use strict";
 
 var mongoose = require('mongoose');
-
+var mongooseExt = require('../lib/mongooseExt');
 var Schema = mongoose.Schema;
 
 /**
@@ -26,4 +26,6 @@ var KeywordSchema = new Schema({
 
 });
 
+
+mongooseExt(KeywordSchema);
 mongoose.model('Keyword', KeywordSchema);

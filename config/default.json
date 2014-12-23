@@ -14,6 +14,13 @@
     	"port": 11211
     },
 
+    "//": "阿里云的MQS",
+    "MQS": {
+        "accessKeyId": "you accessKeyId",
+        "accessKeySecret": "you accessKeySecret",
+        "url": "http://{you}.aliyuncs.com"
+    },
+
     "//": "静态资源cdn",
     "staticHost": null,
 

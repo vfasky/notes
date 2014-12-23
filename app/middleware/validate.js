@@ -117,7 +117,12 @@ module.exports = exports = function(rules) {
     return function *(next) {
         var self = this;
         var keys = Object.keys(rules);
+
         var body = this.request.body || {};
+
+        if(this.method.toLocaleUpperCase() === 'GET'){
+            body = this.query;
+        }
 
         self.validateError = null;
 

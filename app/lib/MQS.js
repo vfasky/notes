@@ -20,6 +20,16 @@ var nameMap = {
 
 module.exports = client;
 
+module.exports.install = function(){
+	return function(done){
+		client.queue.create(_emailQueue).then(function(){
+	    	client.queue.create(_indexQueue).then(function(){
+	    		done(); 
+	    	}, done);
+	    }, done);
+	};
+};
+
 module.exports.send = function(type, msg){
 	return client.message.send(nameMap[type], {
         msg: JSON.stringify(msg)
@@ -27,5 +37,10 @@ module.exports.send = function(type, msg){
 };
 
 module.exports.get = function(type, wait){
-	return client.message.get(nameMap[type], wait);
+	return function(done){
+		client.message.get(nameMap[type], wait).then(function(data){
+			console.log(data);
+			done(data);
+		}, done);
+	};
 };

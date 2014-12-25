@@ -10,6 +10,7 @@ var config = require('../../config');
 var validate = require('../middleware/validate');
 var util = require('../lib/util');
 var router = new Router();
+var MQS = require('../lib/MQS');
 
 router.get('/install', function*() {
     if (!config.superUserEmail) {
@@ -91,6 +92,10 @@ router.post('/install', validate({
     yield new model.Book({
         _user: user._id
     }).saveAsync();
+
+    //创建队列
+    yield MQS.queue.create(MQS.email);
+    yield MQS.queue.create(MQS.index);
 
     this.body = {
         state: true

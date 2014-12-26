@@ -1,0 +1,30 @@
+{% extends "_layout/base.html" %}
+
+{% block body %}
+	<div id="top-menu">
+		{% if session.user == undef %}
+		<ul class="auth">
+			<li>
+				<a href="/sign">登录</a>
+			</li>
+			<li>
+				<a href="/sign">注册</a>
+			</li>
+		</ul>
+		{% endif %}
+	</div>
+
+	<div id="main">
+		{% block brand %}
+		<div id="brand">
+			<a href="/">
+				<h1>笔 记</h1>
+			</a>
+		</div>
+		{% endblock %}
+		
+
+		{% block content %}
+		{% endblock %}
+	</div>
+{% endblock %}

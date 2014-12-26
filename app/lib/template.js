@@ -80,8 +80,15 @@ exports = module.exports = function(app, settings) {
      * @type {Object}
      */
     var locals = {
-        config: require('../../config'),
-        ENV: env
+        get config() {
+            return config;
+        },
+        get ENV() {
+            return env;
+        },
+        get undef(){
+            return undefined;
+        }
     };
 
     /**
@@ -89,15 +96,27 @@ exports = module.exports = function(app, settings) {
      * @param {String} view
      * @param {Object} options
      */
-    var render = function(view, options) {
+    var render = function(view, options, self) {
+        options = options || {};
+        
         return function(done) {
-            template.render(view, _.extend(locals, options), done);
+            options = _.extend(locals, options);
+
+            if(options.session === undefined){
+                Object.defineProperty(options, 'session', {
+                    get : function(){
+                        return self.session;
+                    }
+                });
+            }
+
+            template.render(view, options, done);
         };
     };
 
     app.context.renderString = function*(view, options) {
         var html =
-            yield render(view, options);
+            yield render(view, options, this);
 
         return html;
     };
@@ -105,7 +124,7 @@ exports = module.exports = function(app, settings) {
 
     app.context.render = function*(view, options) {
         var html =
-            yield render(view, options);
+            yield render(view, options, this);
 
         this.body = html;
     };

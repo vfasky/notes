@@ -9,6 +9,8 @@ var acl = require('../../../middleware/acl');
 var validate = require('../../../middleware/validate');
 var model = require('../../../model');
 var router = new Router();
+var MQS = require('../../../lib/MQS');
+var config = require('../../../../config');
 
 /**
  * 取笔记
@@ -66,8 +68,13 @@ router.post('/api/v1/note', acl.allow('user'), validate({
             _book: book._id,
             _user: user._id
         }).saveAsync();
-        
-    //TODO 创建索引
+
+    //创建索引
+    if (config.MQS.accessKeyId !== 'you accessKeyId') {
+        MQS.message.send(MQS.index, {
+            msg: String(note._id)
+        });
+    }
 
     this.body = {
         state: true,
@@ -115,7 +122,13 @@ router.put('/api/v1/note', acl.allow('user'), validate({
 
     yield note.saveAsync();
 
-    //TODO 重建索引
+    //重建索引
+    if (config.MQS.accessKeyId !== 'you accessKeyId') {
+   
+        MQS.message.send(MQS.index, {
+            msg: String(note._id)
+        });
+    }
 
     this.body = {
         state: true,
@@ -142,6 +155,10 @@ router.del('/api/v1/note', acl.allow('user'), validate({
     if (null === note) {
         this.throw(200, '笔记不存在');
     }
+
+    yield model.NoteKeyword.remove({
+        _note: note._id
+    }).exec();
 
     yield note.removeAsync();
 

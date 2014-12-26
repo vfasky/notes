@@ -10,6 +10,11 @@ dev:
 	--harmony \
 	server.js
 
+dev-task:
+	@./node_modules/.bin/node-dev \
+	--harmony \
+	task.js
+
 test:
 	@NODE_ENV=test ./node_modules/.bin/mocha \
 	--harmony \

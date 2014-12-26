@@ -169,5 +169,32 @@ NoteSchema.methods.saveKeywords = function(keywords) {
     };
 };
 
+/**
+ * 构建索引
+ * @author vfasky <vfasky@gmail.com>
+ * @date   2014-12-26
+ */
+NoteSchema.methods.buildIndex = function(){
+    var self = this;
+
+    //删除旧索引
+    var delIndex = function(done){
+        var NoteKeyword = self.model('NoteKeyword'); 
+        NoteKeyword.remove({
+            _note: self._id
+        }, done); 
+    };  
+
+    return function(done){
+        delIndex(function(err){
+            if(err){
+                return done(err); 
+            }
+
+            self.saveKeywords(self.buildKeywords())(done);
+        });    
+    };
+};
+
 mongooseExt(NoteSchema);
 mongoose.model('Note', NoteSchema);

@@ -94,8 +94,10 @@ router.post('/install', validate({
     }).saveAsync();
 
     //创建队列
-    yield MQS.queue.create(MQS.email);
-    yield MQS.queue.create(MQS.index);
+    if(config.MQS.accessKeyId !== 'you accessKeyId'){
+        yield MQS.queue.create(MQS.email);
+        yield MQS.queue.create(MQS.index);
+    }
 
     this.body = {
         state: true

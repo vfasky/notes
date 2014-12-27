@@ -9,7 +9,7 @@ var acl = require('../../../middleware/acl');
 var validate = require('../../../middleware/validate');
 var model = require('../../../model');
 var router = new Router();
-var MQS = require('../../../lib/MQS');
+var task = require('../../../lib/task');
 var config = require('../../../../config');
 
 /**
@@ -71,7 +71,7 @@ router.post('/api/v1/note', acl.allow('user'), validate({
 
     //创建索引
     if (config.MQS.accessKeyId !== 'you accessKeyId') {
-        MQS.message.send(MQS.index, {
+        task.message.send(task.index, {
             msg: String(note._id)
         });
     }
@@ -125,7 +125,7 @@ router.put('/api/v1/note', acl.allow('user'), validate({
     //重建索引
     if (config.MQS.accessKeyId !== 'you accessKeyId') {
    
-        MQS.message.send(MQS.index, {
+        task.message.send(task.index, {
             msg: String(note._id)
         });
     }

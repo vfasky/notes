@@ -4,7 +4,7 @@
  * 阿里云的MQS
  * @author vfasky <vfasky@gmail.com>
  */
-var config = require('../../config');
+var config = require('../../../config');
 var MQSClient = require('aliyun_mqs');
 
 var _emailQueue = 'note-email';

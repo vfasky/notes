@@ -52,6 +52,8 @@ define('catke/validate',
 	    'isMongoId'
 	];
 
+	var _notNull = ['isLength', 'isNull'];
+
 	/**
 	 * 取验证实例
 	 * @param {Mixed} rule 
@@ -261,6 +263,9 @@ define('catke/validate',
 	        var args = 1 <= total ? [].slice.call(arguments, 0) : [];
 
 	        var rule = function(x) {
+	        	if($.trim(String(x)).length === 0 && $.inArray(v, _notNull) === -1){
+	                return true;
+	            }
 	        	if(total === args.length){
 		            args.splice(0, 0, x);
 	        	}	

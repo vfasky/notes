@@ -5,7 +5,7 @@
  */
 var config = require('./config');
 var validator = require('validator');
-var MQS = require('./app/lib/MQS');
+var task = require('./app/lib/task');
 var model = require('./app/model');
 /**
  * 长连接，等待2秒
@@ -41,7 +41,7 @@ var getTask = function(type, callback) {
     };
 
     var remove = function(receiptHandle) {
-        MQS.message.remove(type, receiptHandle)
+        task.message.remove(type, receiptHandle)
             .then(next, function(err) {
                 log(type, err);
                 next();
@@ -51,7 +51,7 @@ var getTask = function(type, callback) {
     var run = {};
 
     //创建索引任务
-    run[MQS.index] = function(data){
+    run[task.index] = function(data){
     	var id = data.MessageBody;
         if (validator.isMongoId(id)) {
             model.Note.findOne({
@@ -78,7 +78,7 @@ var getTask = function(type, callback) {
         }
     };
 
-    MQS.message.get(type, wait).then(function(data) {
+    task.message.get(type, wait).then(function(data) {
 
         run[type](data);
 
@@ -92,8 +92,8 @@ var getTask = function(type, callback) {
 };
 
 var taskLoop = function() {
-    getTask(MQS.email, function() {
-        getTask(MQS.index, taskLoop);
+    getTask(task.email, function() {
+        getTask(task.index, taskLoop);
     });
 };
 

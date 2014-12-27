@@ -10,7 +10,7 @@ var config = require('../../config');
 var validate = require('../middleware/validate');
 var util = require('../lib/util');
 var router = new Router();
-var MQS = require('../lib/MQS');
+var task = require('../lib/task');
 
 router.get('/install', function*() {
     if (!config.superUserEmail) {
@@ -95,8 +95,8 @@ router.post('/install', validate({
 
     //创建队列
     if(config.MQS.accessKeyId !== 'you accessKeyId'){
-        yield MQS.queue.create(MQS.email);
-        yield MQS.queue.create(MQS.index);
+        yield task.queue.create(task.email);
+        yield task.queue.create(task.index);
     }
 
     this.body = {

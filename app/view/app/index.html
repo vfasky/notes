@@ -1,0 +1,14 @@
+{% extends "_layout/note.html" %} 
+
+{% block content %}
+<div id="app-main"></div>
+{% endblock %}
+
+{% block js %}
+	<script>
+		require(['jquery', 'note'], function($, note){
+			"use strict";
+			note.main($('#app-main'));
+		});
+	</script>
+{% endblock %}

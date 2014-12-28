@@ -124,5 +124,33 @@ define('catke/classExt', ['jquery'], function($) {
         exports.mix(Cls.prototype, exports.ClassEvent.prototype);
     };
 
+    exports.extend = function(Class, definition) {
+        definition = $.extend({
+            initialize: function() {}
+        }, definition || {});
+
+        var initialize = definition.initialize;
+
+        var _New = function() {
+            this.superclass = Class.prototype;
+            this.superclass.initialize = Class;
+            initialize.apply(this, arguments);
+        };
+
+        _New.prototype = exports.extendProto(Class.prototype);
+
+        delete definition.initialize;
+
+        for (var k in definition) {
+            _New.prototype[k] = definition[k];
+        }
+
+        _New.extend = function(definition) {
+            return exports.extend(_New, definition);
+        };
+
+        return _New;
+    };
+
     return exports;
 });

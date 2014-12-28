@@ -124,6 +124,34 @@ define('catke/classExt', ['jquery'], function($) {
         exports.mix(Cls.prototype, exports.ClassEvent.prototype);
     };
 
+    exports.extend = function(Class, definition) {
+        definition = $.extend({
+            initialize: function() {}
+        }, definition || {});
+
+        var initialize = definition.initialize;
+
+        var _New = function() {
+            this.superclass = Class.prototype;
+            this.superclass.initialize = Class;
+            initialize.apply(this, arguments);
+        };
+
+        _New.prototype = exports.extendProto(Class.prototype);
+
+        delete definition.initialize;
+
+        for (var k in definition) {
+            _New.prototype[k] = definition[k];
+        }
+
+        _New.extend = function(definition) {
+            return exports.extend(_New, definition);
+        };
+
+        return _New;
+    };
+
     return exports;
 });
 
@@ -890,6 +918,8 @@ define('catke/validate',
 	    'isMongoId'
 	];
 
+	var _notNull = ['isLength', 'isNull'];
+
 	/**
 	 * 取验证实例
 	 * @param {Mixed} rule 
@@ -1099,6 +1129,9 @@ define('catke/validate',
 	        var args = 1 <= total ? [].slice.call(arguments, 0) : [];
 
 	        var rule = function(x) {
+	        	if($.trim(String(x)).length === 0 && $.inArray(v, _notNull) === -1){
+	                return true;
+	            }
 	        	if(total === args.length){
 		            args.splice(0, 0, x);
 	        	}	

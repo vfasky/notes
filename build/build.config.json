@@ -5,6 +5,7 @@
 		"catke/http",
 		"catke/popTips",
 		"catke/highlight",
-		"catke/classExt"
+		"catke/classExt",
+		"note/main"
 	]
 }

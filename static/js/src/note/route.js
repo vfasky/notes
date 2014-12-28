@@ -3,7 +3,7 @@
  * @module cepin/router
  * @author kotenei <kotenei@qq.com>
  */
-define('note/router', ['jquery'], function($) {
+define('note/route', ['jquery'], function($) {
     "use strict";
 
     /**

@@ -56,6 +56,15 @@ var buildRequireConfig = function(pack) {
             config.paths[pack] = appConfig.staticHost + 'js/dist/' + pack + '.' + has + '.min';
         }
 
+        //加入静态服务器前缀
+        var staticHost = appConfig.staticHost || '';
+        for(var k in config.paths){
+            if(config.paths[k].indexOf('//') !== 0 && config.paths[k].indexOf('http') !== 0){
+                config.paths[k] = staticHost + config.paths[k];
+                //console.log(config.paths[k]);
+            }
+        }
+
         var configStr = 'require.config(' + JSON.stringify(config, null, 4) + ');';
 
         fs.writeFileSync(path.join(staticRoot, 'js/config.js'), configStr, 'utf8');

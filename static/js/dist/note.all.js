@@ -2,151 +2,187 @@
  * web App 框架
  * @module note/app
  * @author vfasky <vfasky@gmail.com>
- */	
-define('note/app', 
-['jquery', 'note/router', 'catke/popTips', 'catke/loading', 'catke/classExt'], 
-function($, Router, popTips, Loading, classExt){
-	"use strict";
+ */
+define('note/app', ['jquery', 'note/route', 'catke'],
+    function($, Route, catke) {
+        "use strict";
 
-	var loading = new Loading({
-		tip: '加载中 ... '
-	});
+        var popTips = catke.popTips;
+        var Loading = catke.Loading;
+        var classExt = catke.classExt;
 
-	var App = function($el, config){
-        //路由绑定
-        this._route = {};
-        //当前view
-        this._view = null;
+        var loading = new Loading({
+            tip: '加载中 ... '
+        });
 
-        //绑定事件绑定
-        this.addEvent('viewBeforeShow');
-        this.addEvent('viewAfterShow');
-        
-        //app 容器
-        this.$el = $el;
-        //配置
-        this.config = $.extend({
-          viewClass: 'app-view',
-          Template: null
-        }, config || {});
-        
-        //加载效果
-        this.loading = loading;
-        //提示效果
-        this.popTips = popTips;
-    };
+        var App = function($el, config) {
+            //路由绑定
+            this._route = {};
+            //当前view
+            this._view = null;
 
-  	App.prototype = classExt.extendProto(classExt.ClassEvent.prototype);  
+            //绑定事件绑定
+            this.addEvent('viewBeforeShow');
+            this.addEvent('viewAfterShow');
 
-    App.prototype.callView = function(viewName, context, callback){
-        var self = this;
-        var $el;
+            //app 容器
+            this.$el = $el;
+            //配置
+            this.config = $.extend({
+                viewClass: 'app-view',
+                Template: null
+            }, config || {});
 
-        this.callEvent('viewBeforeShow', viewName);
-
-        callback = callback || function(){};
-        //完成时回调
-        var complete = function(view){
-            callback();
-            self.callEvent('viewAfterShow', view);
+            //加载效果
+            this.loading = loading;
+            //提示效果
+            this.popTips = popTips;
         };
 
-        if(self._view !== null){
-            //已经加载，刷新
-            if(self._view.name === viewName){
-                self._view.instance.run(context);
-                complete(self._view.instance);
-                return;
-            }
-            //销毁旧view
-            else{
-                var oldView = self._view.instance;
-                oldView.destroy();
-            }
-        }
+        App.prototype = classExt.extendProto(classExt.ClassEvent.prototype);
 
-        self.loading.show();
+        App.prototype.callView = function(viewName, context, callback) {
+            var self = this;
+            var $el;
 
-        var callView = function(View){
-            self.loading.hide();
-            $el = $('<div class="' + self.config.viewClass + '"></div>');
+            this.callEvent('viewBeforeShow', viewName);
 
-            var view = new View($el, self);
-            view.run(context);
-
-            self._view = {
-                name: viewName,
-                instance: view
+            callback = callback || function() {};
+            //完成时回调
+            var complete = function(view) {
+                callback();
+                self.callEvent('viewAfterShow', view);
             };
 
-            view.$el.appendTo(self.$el);
-       
-            complete(self._view.instance);
+            if (self._view !== null) {
+                //已经加载，刷新
+                if (self._view.name === viewName) {
+                    self._view.instance.run(context);
+                    complete(self._view.instance);
+                    return;
+                }
+                //销毁旧view
+                else {
+                    var oldView = self._view.instance;
+                    oldView.destroy();
+                }
+            }
+
+            self.loading.show();
+
+            var callView = function(View) {
+                self.loading.hide();
+                $el = $('<div class="' + self.config.viewClass + '"></div>');
+
+                var view = new View($el, self);
+                view.run(context);
+
+                self._view = {
+                    name: viewName,
+                    instance: view
+                };
+
+                view.$el.appendTo(self.$el);
+
+                complete(self._view.instance);
+            };
+
+            if (typeof(viewName) === 'string') {
+                //调度view
+                var _require = window.requirejs || window.require;
+                _require([viewName], function(View) {
+                    callView(View);
+                });
+            } else {
+                callView(viewName);
+            }
         };
 
-        if(typeof(viewName) === 'string'){
-            //调度view
-            var _require = window.requirejs || window.require;
-            _require([viewName], function(View){
-                callView(View);
-            });
-        }
-        else{
-            callView(viewName);
-        }
-    };
-
-    /**
-     * 注册路由
-     *
-     * @param {String} path - 路径名
-     * @param {String} viewName - 视图名
-     * @return {Void}
-     */
-    App.prototype.route = function(path, constraints, viewName){
-        if(viewName === undefined){
-            viewName    = constraints;
-            constraints = {};
-        }
-        this._route[path] = [constraints, viewName];
-        return this;
-    };
-    
-    App.prototype.url = function(viewName){
-        viewName = $.trim(viewName);
-        for(var k in this._route){
-            var v = this._route[k];
-            if(viewName === v[1]){
-                return k;
+        /**
+         * 注册路由
+         *
+         * @param {String} path - 路径名
+         * @param {String} viewName - 视图名
+         * @return {Void}
+         */
+        App.prototype.route = function(path, constraints, viewName) {
+            if (viewName === undefined) {
+                viewName = constraints;
+                constraints = {};
             }
-        }
-    };
+            this._route[path] = [constraints, viewName];
+            return this;
+        };
 
-    //启动app
-    App.prototype.run = function(){
-        var self = this;
+        App.prototype.url = function(viewName) {
+            viewName = $.trim(viewName);
+            for (var k in this._route) {
+                var v = this._route[k];
+                if (viewName === v[1]) {
+                    return k;
+                }
+            }
+        };
 
-        var router = new Router();
+        //启动app
+        App.prototype.run = function() {
+            var self = this;
 
-        for(var path in self._route){
-            (function(path){
-                var info = self._route[path];
-                router.map(path, info[0], function(params){
-                    self.callView(info[1], params || {});
-                });
-            })(path);
-        }
-        router.init();
-    };
+            var route = new Route();
 
-    return App;
+            for (var path in self._route) {
+                (function(path) {
+                    var info = self._route[path];
+                    route.map(path, info[0], function(params) {
+                        self.callView(info[1], params || {});
+                    });
+                })(path);
+            }
+            route.init();
+        };
+
+        return App;
+    });
+
+/**
+ * doc
+ * @module note/book
+ * @author vfasky <vfasky@gmail.com>
+ */	
+define('note/book', ['note/view'], function(View){
+	"use strict";
+	return View.extend({
+		initialize: function($el, app) {
+            this.superclass.initialize.call(this, $el, app);
+        },
+		run: function(context){
+			this.superclass.run.call(this, context);
+		}
+	});
 });
+/**
+ * app 入口
+ * @module note/main
+ * @author vfasky <vfasky@gmail.com>
+ */	
+define('note/main', ['note/app', 'jquery'], 
+	function(App, $){
+		"use strict";
+		return function($el){
+			var app = new App($el, {
+				Template: null
+			});
+
+			app.route('/', 'note/book')
+			   .run();	
+		};
+	});
 /**
  * router
  * @module cepin/router
  * @author kotenei <kotenei@qq.com>
  */
-define('note/router', ['jquery'], function($) {
+define('note/route', ['jquery'], function($) {
     "use strict";
 
     /**
@@ -333,71 +369,81 @@ define('note/router', ['jquery'], function($) {
 });
 
 /**
+ * 模板引擎
+ * @module site/template
+ * @author vfasky <vfasky@gmail.com>
+ */
+define('site/template', ['ant'], function(Ant) {
+    "use strict";
+
+    var filters = {};
+
+    filters.String = String;
+    filters.Number = Number;
+
+    return Ant.extend({
+        defaults: {
+            filters: filters
+        }
+    }, {
+        load: function(uri) {
+            console.log(uri);
+        }
+    });
+});
+
+/**
  * view
  * @module note/view
  * @author vfasky <vfasky@gmail.com>
- */	
-define('note/view', 
-['jquery', 'catke/http', 'catke/classExt'], 
-function($, http, classExt){
-	"use strict";
+ */
+define('note/view', ['jquery', 'catke'],
+    function($, catke) {
+        "use strict";
+        var http = catke.http;
+        var classExt = catke.classExt;
 
-	var View = function($el, app){
-        this.$el = $el;
-        this.app = app;
+        var View = function($el, app) {
+            this.$el = $el;
+            this.app = app;
 
-        //模板引擎绑定
-        if(app.config.Template){
-            this.Template = app.config.Template;
-        }
+            //模板引擎绑定
+            if (app.config.Template) {
+                this.Template = app.config.Template;
+            }
 
-        //封装一个 promise 规范的http helper
-        this.http = http;
-    };
-
-
-    View.prototype.when = function(){
-        return $.when.apply(this, arguments);
-    };
-
-    View.prototype.run = function(context){
-        this.context = context;
-    };
-
-    View.prototype.destroy = function(){
-        this.$el.remove();
-    };
-
-    View.extend = function(definition){
-        definition = $.extend({
-            initialize: function(){}
-        }, definition || {});
-
-        var initialize = definition.initialize;
-
-        var _View = function($el, app){
-            this.superclass = View.prototype;
-            this.superclass.initialize = View;
-            initialize.call(this, $el, app);
+            //封装一个 promise 规范的http helper
+            this.http = http;
         };
 
-        _View.prototype = classExt.extendProto(View.prototype);
 
-        delete definition.initialize;
+        View.prototype.when = function() {
+            return $.when.apply(this, arguments);
+        };
 
-        for(var k in definition){
-            _View.prototype[k] = definition[k];
-        }
-        return _View;
-    };
-	
-	return View;
-});
+        View.prototype.run = function(context) {
+            this.context = context;
+        };
+
+        View.prototype.destroy = function() {
+            this.$el.remove();
+        };
+
+        View.extend = function(definition) {
+            return classExt.extend(View, definition);
+        };
+
+        return View;
+    });
+
 ;
-define("note", ["note/app", "note/route", "note/view"], function(_app, _route, _view){
+define("note", ["note/app", "note/book", "note/main", "note/route", "note/template", "note/view"], function(_app, _book, _main, _route, _template, _view){
     return {
         "App" : _app,
+        "Book" : _book,
+        "main" : _main,
         "Route" : _route,
+        "Template" : _template,
         "View" : _view
     };
 });

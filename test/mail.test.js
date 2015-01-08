@@ -23,6 +23,11 @@ describe('mail', function() {
             to: 'vfasky@me.com',
             title: 'note test - default',
             html: '<h3>default send</h3>'
-        })(done);
+        })(function(err, res){
+            if(!err || err.message === 'Message limit reached.'){
+                return done();
+            }
+            done(err, res);
+        });
     });
 });

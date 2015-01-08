@@ -35,7 +35,13 @@ module.exports = function(options) {
                 return done(null, JSON.parse(body));
             }
 
-            done(err || body);
+            if(err){
+                return done({
+                    message: err
+                });
+            }
+
+            done(JSON.parse(body));
         });
     };
 };

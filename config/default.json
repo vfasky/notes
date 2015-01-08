@@ -10,11 +10,21 @@
 
     "//": "memcached 连接信息，用于存在session",
     "memcached": {
-    	"host": "localhost",
-    	"port": 11211
+        "host": "localhost",
+        "port": 11211
     },
 
-    "//": "使用的消息队列",
+    "//": "使用那个服务发送邮件",
+    "mailType": "mailgun",
+
+    "//": "mailguns配置",
+    "mailgun": {
+        "url": "https://api.mailgun.net/v2/samples.mailgun.org/messages",
+        "apiKey": "key-3ax6xnjp29jd6fds4gc373sgvjxteol0",
+        "from": "Excited User <excited@samples.mailgun.org>"
+    },
+
+    "//": "使用那个消息队列",
     "taskType": "MQS",
 
     "//": "阿里云的MQS",

@@ -15,6 +15,17 @@ define('catke/classExt', ['jquery'], function($) {
 
     var Ctor = function() {};
 
+    var indexOf = Array.prototype.indexOf ? function(arr, item) {
+        return arr.indexOf(item);
+    } : function(arr, item) {
+        for (var i = 0, len = arr.length; i < len; i++) {
+            if (arr[i] === item) {
+                return i;
+            }
+        }
+        return -1;
+    };
+
     /**
      * mix
      * @param  {Object} r  target
@@ -26,7 +37,9 @@ define('catke/classExt', ['jquery'], function($) {
         // Copy "all" properties including inherited ones.
         for (var p in s) {
             if (s.hasOwnProperty(p)) {
-                if (wl && indexOf(wl, p) === -1) continue;
+                if (wl && indexOf(wl, p) === -1) {
+                    continue;
+                }
                 // 在 iPhone 1 代等设备的 Safari 中，prototype 也会被枚举出来，需排除
                 if (p !== "prototype") {
                     r[p] = s[p];
@@ -101,9 +114,9 @@ define('catke/classExt', ['jquery'], function($) {
      * @param  {Object} proto prototype
      * @return {Object}
      */
-    exports.extendProto = Object.__proto__ ? function(proto) {
+    exports.extendProto = Object.hasOwnProperty('__proto__') ? function(proto) {
         return {
-            __proto__: proto
+            '__proto__': proto
         };
     } : function(proto) {
         Ctor.prototype = proto;

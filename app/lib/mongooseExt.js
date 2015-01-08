@@ -1,12 +1,12 @@
 "use strict";
 
 var mongoose = require('mongoose');
-var Promise = mongoose.Promise;
+var MPromise = mongoose.Promise;
 
 module.exports = exports = function(Schema) {
     Schema.methods.saveAsync = function() {
         var self = this;
-        var promise = new Promise();
+        var promise = new MPromise();
 
         self.save(function(err, data) {
             if (err) {
@@ -20,7 +20,7 @@ module.exports = exports = function(Schema) {
 
     Schema.methods.removeAsync = function() {
         var self = this;
-        var promise = new Promise();
+        var promise = new MPromise();
 
         self.remove(function(err, data) {
             if (err) {

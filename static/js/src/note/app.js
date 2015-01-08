@@ -130,13 +130,15 @@ define('note/app', ['jquery', 'note/route', 'catke'],
 
             var route = new Route();
 
+            var addPath = function(path){
+                var info = self._route[path];
+                route.map(path, info[0], function(params) {
+                    self.callView(info[1], params || {});
+                });
+            };
+
             for (var path in self._route) {
-                (function(path) {
-                    var info = self._route[path];
-                    route.map(path, info[0], function(params) {
-                        self.callView(info[1], params || {});
-                    });
-                })(path);
+                addPath(path);
             }
             route.init();
         };

@@ -10,12 +10,15 @@ dev:
 	--harmony \
 	server.js
 
+jshint:
+	@./node_modules/.bin/jshint .
+
 dev-task:
 	@./node_modules/.bin/node-dev \
 	--harmony \
 	task.js
 
-test:
+test: jshint
 	@NODE_ENV=test ./node_modules/.bin/mocha \
 	--harmony \
 	$(TESTS)

@@ -43,7 +43,7 @@ define('catke/task', ['jquery'], function($) {
     //运行任务
     var runTasks = function() {
         if (!_intervalTime && getTaskLength() > 0) {
-            _intervalTime = setInterval(function(args) {
+            _intervalTime = setInterval(function() {
                 $.each(_intervalList, function(k, v) {
                     if (v && $.isFunction(v.callback)) {
                         v.callback(v);

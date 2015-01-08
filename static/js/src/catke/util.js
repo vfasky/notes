@@ -27,7 +27,9 @@ define('catke/util', function() {
             while (
                 div.innerHTML = '<!--[if gt IE ' + (++v) + ']><i></i><![endif]-->',
                 all[0]
-            );
+            ){
+                continue;
+            }
 
             return v > 4 ? v : undef;
         }())

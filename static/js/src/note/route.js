@@ -10,32 +10,34 @@ define('note/route', ['jquery'], function($) {
      * 事件处理
      * @type {Object}
      */
-    var eventHelper = {
-        addEventListener: function(element, type, handle) {
-            if (element.addEventListener) {
-                element.addEventListener(type, handle, false);
-            } else if (element.attachEvent) {
-                element.attachEvent("on" + type, handle);
-            } else {
-                element["on" + type] = handle;
-            }
-        },
-        removeEventListener: function(element, type, handle) {
-            if (element.removeEventListener) {
-                element.removeEventListener(type, handle, false);
-            } else if (element.detachEvent) {
-                element.detachEvent("on" + type, handle);
-            } else {
-                element["on" + type] = null;
-            }
-        },
-        proxy: function(fn, thisObject) {
-            var proxy = function() {
-                return fn.apply(thisObject || this, arguments);
-            };
-            return proxy;
-        }
-    };
+    /*
+     * var eventHelper = {
+     *     addEventListener: function(element, type, handle) {
+     *         if (element.addEventListener) {
+     *             element.addEventListener(type, handle, false);
+     *         } else if (element.attachEvent) {
+     *             element.attachEvent("on" + type, handle);
+     *         } else {
+     *             element["on" + type] = handle;
+     *         }
+     *     },
+     *     removeEventListener: function(element, type, handle) {
+     *         if (element.removeEventListener) {
+     *             element.removeEventListener(type, handle, false);
+     *         } else if (element.detachEvent) {
+     *             element.detachEvent("on" + type, handle);
+     *         } else {
+     *             element["on" + type] = null;
+     *         }
+     *     },
+     *     proxy: function(fn, thisObject) {
+     *         var proxy = function() {
+     *             return fn.apply(thisObject || this, arguments);
+     *         };
+     *         return proxy;
+     *     }
+     * };
+     */
 
     /**
      * 路由
@@ -50,7 +52,10 @@ define('note/route', ['jquery'], function($) {
      */
     Router.prototype.init = function() {
         var self = this;
-        eventHelper.addEventListener(window, 'hashchange', eventHelper.proxy(self.listener, this));
+        $(window).on('hashchange', function(){
+            self.listener.apply(self, arguments);
+        });
+        //eventHelper.addEventListener(window, 'hashchange', eventHelper.proxy(self.listener, this));
         this.listener();
     };
 

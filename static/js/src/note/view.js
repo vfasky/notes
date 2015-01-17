@@ -3,8 +3,8 @@
  * @module note/view
  * @author vfasky <vfasky@gmail.com>
  */
-define('note/view', ['jquery', 'catke'],
-    function($, catke) {
+define('note/view', ['jquery', 'catke', 'note/template'],
+    function($, catke, template) {
         "use strict";
         var http = catke.http;
         var classExt = catke.classExt;
@@ -14,10 +14,7 @@ define('note/view', ['jquery', 'catke'],
             this.app = app;
 
             //模板引擎绑定
-            if (app.config.Template) {
-                this.Template = app.config.Template;
-            }
-
+            this.template = template;
             //封装一个 promise 规范的http helper
             this.http = http;
         };
@@ -33,6 +30,24 @@ define('note/view', ['jquery', 'catke'],
 
         View.prototype.destroy = function() {
             this.$el.remove();
+        };
+
+        View.prototype.initAnt = function(tplUrl, initArgs){
+            var dtd = $.Deferred();
+            var self = this;
+           
+            if(this.ant){
+                dtd.resolve(this.ant);
+            }
+            else{
+                this.template.load(tplUrl).done(function(html){
+                    self.$el.html(html);
+                    self.ant = self.template(self.$el, initArgs || {});
+                    dtd.resolve(self.ant);
+                });
+            }
+            
+            return dtd.promise();
         };
 
         View.extend = function(definition) {

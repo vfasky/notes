@@ -7,11 +7,9 @@ define('note/main', ['note/app'],
     function(App) {
         "use strict";
         return function($el) {
-            var app = new App($el, {
-                Template: null
-            });
+            var app = new App($el);
 
             app.route('/', 'note/book')
-                .run();
+               .run();
         };
     });

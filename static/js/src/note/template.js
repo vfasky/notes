@@ -1,23 +1,39 @@
 /**
  * 模板引擎
- * @module site/template
+ * @module note/template
  * @author vfasky <vfasky@gmail.com>
  */
-define('site/template', ['ant'], function(Ant) {
+define('note/template', ['ant', 'jquery'], function(Ant, $) {
     "use strict";
 
-    var filters = {};
+    var template;
+    template = function($el, options) {
+        options = $.extend({
+            filters: template.filters
+        }, options || {});
+        return new Ant($el, options);
+    };
 
-    filters.String = String;
-    filters.Number = Number;
+    template.filters = {
+        String: String,
+        Number: Number
+    };
 
-    return Ant.extend({
-        defaults: {
-            filters: filters
+    template.load = function(uri){
+        var dtd = $.Deferred();
+        var data = uri.split('/');
+        if(data.length !== 2 || data[1].indexOf('.html') === -1){
+            dtd.reject('tpl uri error : ' + uri);
         }
-    }, {
-        load: function(uri) {
-            console.log(uri);
+        else{
+            require(['tpl/' + data[0]], function(tpls){
+                dtd.resolve(tpls[data[1]]);
+            });
         }
-    });
+        
+        return dtd.promise();
+
+    };
+
+    return template;
 });

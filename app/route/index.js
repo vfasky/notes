@@ -8,8 +8,8 @@ router.get('/', function*() {
     yield this.render('index/index.html');
 });
 
-router.get('/signin', function*(){
-	yield this.render('index/signin.html');
+router.get('/signin', function*() {
+    yield this.render('index/signin.html');
 });
 
 module.exports = router;

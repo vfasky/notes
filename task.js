@@ -51,28 +51,28 @@ var getTask = function(type, callback) {
     var run = {};
 
     //创建索引任务
-    run[task.index] = function(data){
-    	var id = data.MessageBody;
+    run[task.index] = function(data) {
+        var id = data.MessageBody;
         if (validator.isMongoId(id)) {
             model.Note.findOne({
-	            _id: id
-	        }, function(note, err) {
-	            if (err) {
-	                log(type, err);
-	                return next();
-	            }
-	            if (null === note) {
-	                remove(data.ReceiptHandle);
-	            } else {
-	                note.buildIndex()(function(err) {
-	                    if (err) {
-	                        log(type, err);
-	                        return next();
-	                    }
-	                    remove(data.ReceiptHandle);
-	                });
-	            }
-	        });	
+                _id: id
+            }, function(note, err) {
+                if (err) {
+                    log(type, err);
+                    return next();
+                }
+                if (null === note) {
+                    remove(data.ReceiptHandle);
+                } else {
+                    note.buildIndex()(function(err) {
+                        if (err) {
+                            log(type, err);
+                            return next();
+                        }
+                        remove(data.ReceiptHandle);
+                    });
+                }
+            });
         } else {
             remove(data.ReceiptHandle);
         }

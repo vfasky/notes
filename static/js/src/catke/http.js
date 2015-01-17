@@ -31,7 +31,7 @@ define('catke/http', ['jquery', 'catke/popTips'], function($, popTips) {
                     }, 800);
                 }
             } else {
-                dtd.resolve(ret.data);
+                dtd.resolve(ret);
             }
         }).fail(function() {
             popTips.error('服务端发生错误了');

@@ -1,57 +1,57 @@
 {% extends "_layout/default.html" %}
 
 {% block content %}
-	<div class="content install">
-		<h3>安装 Note.CatKe</h3>
-		<div class="sub">
-			这是一个笔记 App， 可以帮您有效地管理笔记。
-		</div>
+    <div class="content install">
+        <h3>安装 Note.CatKe</h3>
+        <div class="sub">
+            这是一个笔记 App， 可以帮您有效地管理笔记。
+        </div>
 
-		<form>
-			<div class="ctr">
-				<input type="text" value="{{email.split('@')[0]}}" name="name" placeholder="管理员账号">
-			</div>
-			<div class="ctr">
-				<input type="text" name="password" placeholder="密码">
-			</div>
+        <form>
+            <div class="ctr">
+                <input type="text" value="{{email.split('@')[0]}}" name="name" placeholder="管理员账号">
+            </div>
+            <div class="ctr">
+                <input type="text" name="password" placeholder="密码">
+            </div>
 
-			<div class="action">
-				<button class="button" type="submit">安装</button>
-			</div>
-		</form>
-	</div>
+            <div class="action">
+                <button class="button" type="submit">安装</button>
+            </div>
+        </form>
+    </div>
 {% endblock %}
 
 {% block js %}
-	<script>
-		require(['jquery', 'catke'], function($, catke){
-			"use strict";
-			var Validate = catke.Validate;
-			var $form = $('form');
+    <script>
+        require(['jquery', 'catke'], function($, catke){
+            "use strict";
+            var Validate = catke.Validate;
+            var $form = $('form');
 
-			catke.placeholder($form.find('[placeholder]'));
+            catke.placeholder($form.find('[placeholder]'));
 
-			var form = new Validate($form, {
-				rules: {
-					name: [
-						[Validate.isLength(3, 15), '容许 3 至 15 个字符'],
-						Validate.isAlphanumeric
-					],
-					password: [Validate.isLength(6, 32), '容许 6 至 32 个字符']
-				}
-			});
+            var form = new Validate($form, {
+                rules: {
+                    name: [
+                        [Validate.isLength(3, 15), '容许 3 至 15 个字符'],
+                        Validate.isAlphanumeric
+                    ],
+                    password: [Validate.isLength(6, 32), '容许 6 至 32 个字符']
+                }
+            });
 
-			$form.on('submit', function(){
-				if(form.valid()){
-					catke.http.post('/install', form.getData())
-					          .done(function(){
-					          	catke.popTips.success('安装成功，正在为您跳转 ...', function(){
-						          	window.location.href = '/';
-					          	}, 1000);
-					          });
-				}
-				return false;
-			});
-		});
-	</script>
+            $form.on('submit', function(){
+                if(form.valid()){
+                    catke.http.post('/install', form.getData())
+                              .done(function(){
+                                catke.popTips.success('安装成功，正在为您跳转 ...', function(){
+                                    window.location.href = '/';
+                                }, 1000);
+                              });
+                }
+                return false;
+            });
+        });
+    </script>
 {% endblock %}

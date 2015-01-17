@@ -1,0 +1,1 @@
+define('tpl/note', [], function(){ return {"book.html":"<ul>    <li a-repeat=\"{{books}}\">        {{title}}    </li></ul>"}; });

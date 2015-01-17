@@ -1,14 +1,14 @@
 {% extends "_layout/default.html" %}
 
 {% block content %}
-	<div class="content install">
-		<h3>安装 Note.CatKe</h3>
-		<div class="sub">
-			这是一个笔记 App， 可以帮您有效地管理笔记。
-		</div>
-		
-		<br>
-		
+    <div class="content install">
+        <h3>安装 Note.CatKe</h3>
+        <div class="sub">
+            这是一个笔记 App， 可以帮您有效地管理笔记。
+        </div>
+        
+        <br>
+        
 {{'
 ### Hi, 您需要创建配置文件
 
@@ -16,24 +16,24 @@
 
 ```json
 {
-	"superUserEmail": "your email"
+    "superUserEmail": "your email"
 }
 ```
 
 ' | markdown | safe }}
-		
-		<br>
-		
-		<a href="/install" class="button">我已创建配置文件,并重启应用</a>
-	</div>
+        
+        <br>
+        
+        <a href="/install" class="button">我已创建配置文件,并重启应用</a>
+    </div>
 {% endblock %}
 
 {% block js %}
 <script>
-	require(['catke', 'jquery'], function(catke, $){
-		"use strict";
-		
-		catke.highlight($('pre'));	
-	});
+    require(['catke', 'jquery'], function(catke, $){
+        "use strict";
+        
+        catke.highlight($('pre'));  
+    });
 </script>
 {% endblock %}

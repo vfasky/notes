@@ -15,6 +15,17 @@ define('catke/classExt', ['jquery'], function($) {
 
     var Ctor = function() {};
 
+    var indexOf = Array.prototype.indexOf ? function(arr, item) {
+        return arr.indexOf(item);
+    } : function(arr, item) {
+        for (var i = 0, len = arr.length; i < len; i++) {
+            if (arr[i] === item) {
+                return i;
+            }
+        }
+        return -1;
+    };
+
     /**
      * mix
      * @param  {Object} r  target
@@ -26,7 +37,9 @@ define('catke/classExt', ['jquery'], function($) {
         // Copy "all" properties including inherited ones.
         for (var p in s) {
             if (s.hasOwnProperty(p)) {
-                if (wl && indexOf(wl, p) === -1) continue;
+                if (wl && indexOf(wl, p) === -1) {
+                    continue;
+                }
                 // 在 iPhone 1 代等设备的 Safari 中，prototype 也会被枚举出来，需排除
                 if (p !== "prototype") {
                     r[p] = s[p];
@@ -101,9 +114,9 @@ define('catke/classExt', ['jquery'], function($) {
      * @param  {Object} proto prototype
      * @return {Object}
      */
-    exports.extendProto = Object.__proto__ ? function(proto) {
+    exports.extendProto = Object.hasOwnProperty('__proto__') ? function(proto) {
         return {
-            __proto__: proto
+            '__proto__': proto
         };
     } : function(proto) {
         Ctor.prototype = proto;
@@ -197,7 +210,7 @@ define('catke/highlight', ['jquery', 'highlight'], function($, hljs) {
             }
         }
         else{
-        	compiled = hljs.highlightAuto(str).value;
+            compiled = hljs.highlightAuto(str).value;
         }
 
         var lines = compiled.split('\n'),
@@ -206,7 +219,7 @@ define('catke/highlight', ['jquery', 'highlight'], function($, hljs) {
             firstLine = 1;
 
         if(!lines[lines.length - 1]){
-        	lines.pop();
+            lines.pop();
         }
 
         $.each(lines, function(i, item) {
@@ -260,7 +273,7 @@ define('catke/http', ['jquery', 'catke/popTips'], function($, popTips) {
                     }, 800);
                 }
             } else {
-                dtd.resolve(ret.data);
+                dtd.resolve(ret);
             }
         }).fail(function() {
             popTips.error('服务端发生错误了');
@@ -619,7 +632,7 @@ define('catke/task', ['jquery'], function($) {
     //运行任务
     var runTasks = function() {
         if (!_intervalTime && getTaskLength() > 0) {
-            _intervalTime = setInterval(function(args) {
+            _intervalTime = setInterval(function() {
                 $.each(_intervalList, function(k, v) {
                     if (v && $.isFunction(v.callback)) {
                         v.callback(v);
@@ -855,7 +868,9 @@ define('catke/util', function() {
             while (
                 div.innerHTML = '<!--[if gt IE ' + (++v) + ']><i></i><![endif]-->',
                 all[0]
-            );
+            ){
+                continue;
+            }
 
             return v > 4 ? v : undef;
         }())
@@ -868,297 +883,293 @@ define('catke/util', function() {
  * 表单验证
  * @module catke/validate
  * @author vfasky <vfasky@gmail.com>
- */	
-define('catke/validate', 
-  ['jquery', 'validator', 'catke/toolTips'], 
-  function($, validator, ToolTips){
-	"use strict";
+ */
+define('catke/validate', ['jquery', 'validator', 'catke/toolTips'],
+    function($, validator, ToolTips) {
+        "use strict";
 
-	/**
-	 * 支持的验证规则
-	 * @type {Array}
-	 * @link https://github.com/chriso/validator.js
-	 */
-	var _rules = [
-	    'equals',
-	    'contains',
-	    'matches',
-	    'isEmail',
-	    'isFQDN',
-	    'isURL',
-	    'isIP',
-	    'isAlpha',
-	    'isNumeric',
-	    'isAlphanumeric',
-	    'isBase64',
-	    'isHexadecimal',
-	    'isHexColor',
-	    'isLowercase',
-	    'isUppercase',
-	    'isInt',
-	    'isFloat',
-	    'isDivisibleBy',
-	    'isNull',
-	    'isLength',
-	    //'isByteLength',
-	    'isUUID',
-	    'isDate',
-	    'isAfter',
-	    'isBefore',
-	    'isIn',
-	    'isCreditCard',
-	    'isISBN',
-	    'isJSON',
-	    'isMultibyte',
-	    'isAscii',
-	    'isFullWidth',
-	    'isHalfWidth',
-	    'isVariableWidth',
-	    'isSurrogatePair',
-	    'isMongoId'
-	];
+        /**
+         * 支持的验证规则
+         * @type {Array}
+         * @link https://github.com/chriso/validator.js
+         */
+        var _rules = [
+            'equals',
+            'contains',
+            'matches',
+            'isEmail',
+            'isFQDN',
+            'isURL',
+            'isIP',
+            'isAlpha',
+            'isNumeric',
+            'isAlphanumeric',
+            'isBase64',
+            'isHexadecimal',
+            'isHexColor',
+            'isLowercase',
+            'isUppercase',
+            'isInt',
+            'isFloat',
+            'isDivisibleBy',
+            'isNull',
+            'isLength',
+            //'isByteLength',
+            'isUUID',
+            'isDate',
+            'isAfter',
+            'isBefore',
+            'isIn',
+            'isCreditCard',
+            'isISBN',
+            'isJSON',
+            'isMultibyte',
+            'isAscii',
+            'isFullWidth',
+            'isHalfWidth',
+            'isVariableWidth',
+            'isSurrogatePair',
+            'isMongoId'
+        ];
 
-	var _notNull = ['isLength', 'isNull'];
+        var _notNull = ['isLength', 'isNull'];
 
-	/**
-	 * 取验证实例
-	 * @param {Mixed} rule 
-	 */
-	var getInstantiate = function(rule) {
-	    if (!rule.isInstantiate) {
-	        rule = rule();
-	    }
-
-	    return rule;
-	};
-
-	/**
-	 * 检查规则
-	 * @param  {Mixed} value
-	 * @param  {Mixed} rules
-	 * @return {Array}
-	 */
-	var check = function(value, rules) {
-	    if (false === $.isArray(rules)) {
-	        return [getInstantiate(rules)(value), null, getInstantiate(rules).type];
-	    }
-	    if (2 === rules.length && $.type(rules[1]) === 'string') {
-	        return [getInstantiate(rules[0])(value), rules[1], getInstantiate(rules[0]).type];
-	    }
-	    var res = [true];
-
-	    $.each(rules, function(k, v) {
-	        if ($.isArray(v)) {
-	            if (v.length !== 2) {
-	                throw new Error('validator rule fail');
-	            }
-
-	            if (false === getInstantiate(v[0])(value)) {
-	                res = [false, v[1], getInstantiate(v[0]).type];
-	                return false;
-	            }
-
-	        } else {
-	            if (false === getInstantiate(v)(value)) {
-	                res = [false, null, getInstantiate(v).type];
-	                return false;
-	            }
-	        }
-	    });
-	    return res;
-	};
-
-	/**
-	 * 验证表单
-	 * @param {[type]} $el     [description]
-	 * @param {[type]} options [description]
-	 */
-	var Validate = function($el, options){
-		this.options = $.extend(Validate.DEFAULTS, options || {});
-		this.rules = this.options.rules;
-		this.$form = $el;
-		this.init();
-	};
-
-	/**
-     * 获取验证的元素
-     * @return {Void} 
-     */
-    Validate.prototype.getFields = function () {
-        this.fields = [];
-        var self = this;
-        this.$form.find('input[name], select[name], textarea[name]').filter(function () {
-            return this.name in self.rules;
-        }).each(function(){
-        	self.fields.push($(this));
-        });
-    };
-
-    Validate.prototype.init = function(){
-    	var self = this;
-    	this.getFields();
-    	this.$form.on('focus', 'input[name], select[name], textarea[name]', function(){
-    		self.hideError($(this));
-    	});
-    };
-
-    /**
-     * 验证表单
-     * @return {[type]} [description]
-     */
-    Validate.prototype.valid = function(){
-    	var res = true;
-    	var data = this.getData();
-    	var self = this;
-
-    	$.each(this.fields, function(k, $el){
-    		self.hideError($el);
-       		var name = $el.attr('name');
-    		var value = data[name];
-    		var resData = check(value, self.rules[name]);
-    		res = resData[0];
-    		if(false === res){
-    			var err = resData[1] || self.getDefErrMsg(resData[2]);
-    			self.showError($el, err);
-    		}
-    		return res;
-    	});
-    	return res;
-    };
-
-    Validate.prototype.hideError = function($el){
-    	$el.removeClass(this.options.errorClass);
-    	var tip = $el.data('ckTip');
-
-    	if(tip){
-    		tip.hide();
-    	}
-    };
-
-    Validate.prototype.showError = function($el, msg){
-    	$el.addClass(this.options.errorClass);
-    	var tip = $el.data('ckTip');
-    	var self = this;
-
-    	if(!tip){
-    		tip = new ToolTips($el, {
-    			//tipClass: 'danger',
-    			placement: 'bottom',
-    			trigger: 'manual',
-    			content: '<i class="nicon nicon-warning"></i> ' + msg
-    		});
-    		tip.$tips.css({
-    			zIndex: self.options.tipZindex
-    		});
-    		$el.data('ckTip', tip);
-    	}
-    	else{
-    		tip.setContent('<i class="nicon nicon-warning"></i> ' + msg);
-    	}
-    	tip.show();
-    };
-
-    /**
-     * 默认的错误提示
-     * @param  {String} vType 
-     * @return {String}       
-     */
-    Validate.prototype.getDefErrMsg = function(vType){
-    	var msg = {
-    		required: '这是一个必填项',
-    		isEmail: '请正确填写邮箱',
-    		isURL: '连接不合法',
-    		isAlpha: '只容许字母',
-    		isNumeric: '只容许数字',
-    		isAlphanumeric: '只容许字母，数字，下划线',
-    		isLength: '数值超出范围了',
-    		isByteLength: '字符的长度与要求不符'
-    	};
-
-    	if(msg[vType]){
-    		return msg[vType];
-    	}
-
-    	return '与要求不符';
-    };
-
-    /**
-     * 取表单数据
-     * @return {Object}
-     */
-    Validate.prototype.getData = function () {
-        var data = {};
-        var self = this;
-        self.$form.find('input[name], select[name], textarea[name]').each(function () {
-            var $el = $(this);
-            if ($el.is('[type=checkbox]') === false && $el.is('[type=radio]') === false) {
-                data[$el.attr('name')] = $.trim($el.val());
+        /**
+         * 取验证实例
+         * @param {Mixed} rule
+         */
+        var getInstantiate = function(rule) {
+            if (!rule.isInstantiate) {
+                rule = rule();
             }
-            else if ($el.is('[type=radio]:checked')) {
-                data[$el.attr('name')] = $.trim($el.val());
+
+            return rule;
+        };
+
+        /**
+         * 检查规则
+         * @param  {Mixed} value
+         * @param  {Mixed} rules
+         * @return {Array}
+         */
+        var check = function(value, rules) {
+            if (false === $.isArray(rules)) {
+                return [getInstantiate(rules)(value), null, getInstantiate(rules).type];
             }
-            else if ($el.is('[type=checkbox]:checked')) {
-                var name = $el.attr('name');
-                if (!data[name]) {
-                    data[name] = [];
+            if (2 === rules.length && $.type(rules[1]) === 'string') {
+                return [getInstantiate(rules[0])(value), rules[1], getInstantiate(rules[0]).type];
+            }
+            var res = [true];
+
+            $.each(rules, function(k, v) {
+                if ($.isArray(v)) {
+                    if (v.length !== 2) {
+                        throw new Error('validator rule fail');
+                    }
+
+                    if (false === getInstantiate(v[0])(value)) {
+                        res = [false, v[1], getInstantiate(v[0]).type];
+                        return false;
+                    }
+
+                } else {
+                    if (false === getInstantiate(v)(value)) {
+                        res = [false, null, getInstantiate(v).type];
+                        return false;
+                    }
                 }
-                data[name].push($el.val());
+            });
+            return res;
+        };
+
+        /**
+         * 验证表单
+         * @param {[type]} $el     [description]
+         * @param {[type]} options [description]
+         */
+        var Validate = function($el, options) {
+            this.options = $.extend(Validate.DEFAULTS, options || {});
+            this.rules = this.options.rules;
+            this.$form = $el;
+            this.init();
+        };
+
+        /**
+         * 获取验证的元素
+         * @return {Void}
+         */
+        Validate.prototype.getFields = function() {
+            this.fields = [];
+            var self = this;
+            this.$form.find('input[name], select[name], textarea[name]').filter(function() {
+                return this.name in self.rules;
+            }).each(function() {
+                self.fields.push($(this));
+            });
+        };
+
+        Validate.prototype.init = function() {
+            var self = this;
+            this.getFields();
+            this.$form.on('focus', 'input[name], select[name], textarea[name]', function() {
+                self.hideError($(this));
+            });
+        };
+
+        /**
+         * 验证表单
+         * @return {[type]} [description]
+         */
+        Validate.prototype.valid = function() {
+            var res = true;
+            var data = this.getData();
+            var self = this;
+
+            $.each(this.fields, function(k, $el) {
+                self.hideError($el);
+                var name = $el.attr('name');
+                var value = data[name];
+                var resData = check(value, self.rules[name]);
+                res = resData[0];
+                if (false === res) {
+                    var err = resData[1] || self.getDefErrMsg(resData[2]);
+                    self.showError($el, err);
+                }
+                return res;
+            });
+            return res;
+        };
+
+        Validate.prototype.hideError = function($el) {
+            $el.removeClass(this.options.errorClass);
+            var tip = $el.data('ckTip');
+
+            if (tip) {
+                tip.hide();
             }
+        };
+
+        Validate.prototype.showError = function($el, msg) {
+            $el.addClass(this.options.errorClass);
+            var tip = $el.data('ckTip');
+            var self = this;
+
+            if (!tip) {
+                tip = new ToolTips($el, {
+                    //tipClass: 'danger',
+                    placement: 'bottom',
+                    trigger: 'manual',
+                    content: '<i class="nicon nicon-warning"></i> ' + msg
+                });
+                tip.$tips.css({
+                    zIndex: self.options.tipZindex
+                });
+                $el.data('ckTip', tip);
+            } else {
+                tip.setContent('<i class="nicon nicon-warning"></i> ' + msg);
+            }
+            tip.show();
+        };
+
+        /**
+         * 默认的错误提示
+         * @param  {String} vType
+         * @return {String}
+         */
+        Validate.prototype.getDefErrMsg = function(vType) {
+            var msg = {
+                required: '这是一个必填项',
+                isEmail: '请正确填写邮箱',
+                isURL: '连接不合法',
+                isAlpha: '只容许字母',
+                isNumeric: '只容许数字',
+                isAlphanumeric: '只容许字母，数字，下划线',
+                isLength: '数值超出范围了',
+                isByteLength: '字符的长度与要求不符'
+            };
+
+            if (msg[vType]) {
+                return msg[vType];
+            }
+
+            return '与要求不符';
+        };
+
+        /**
+         * 取表单数据
+         * @return {Object}
+         */
+        Validate.prototype.getData = function() {
+            var data = {};
+            var self = this;
+            self.$form.find('input[name], select[name], textarea[name]').each(function() {
+                var $el = $(this);
+                if ($el.is('[type=checkbox]') === false && $el.is('[type=radio]') === false) {
+                    data[$el.attr('name')] = $.trim($el.val());
+                } else if ($el.is('[type=radio]:checked')) {
+                    data[$el.attr('name')] = $.trim($el.val());
+                } else if ($el.is('[type=checkbox]:checked')) {
+                    var name = $el.attr('name');
+                    if (!data[name]) {
+                        data[name] = [];
+                    }
+                    data[name].push($el.val());
+                }
+            });
+            return data;
+        };
+
+        /**
+         * 必填
+         */
+        Validate.required = function() {
+            var rule = function(x) {
+                return $.trim(String(x || '')).length > 0;
+            };
+            rule.type = 'required';
+            rule.isInstantiate = true;
+            return rule;
+        };
+
+        /**
+         * 扩展验证方法
+         */
+        $.each(_rules, function(k, v) {
+            Validate[v] = function() {
+                var total = arguments.length;
+                var args = 1 <= total ? [].slice.call(arguments, 0) : [];
+
+                var rule = function(x) {
+                    if ($.trim(String(x)).length === 0 && $.inArray(v, _notNull) === -1) {
+                        return true;
+                    }
+                    if (total === args.length) {
+                        args.splice(0, 0, x);
+                    } else {
+                        args[0] = x;
+                    }
+                    //console.log(validator, v);
+                    return validator[v].apply(null, args);
+                };
+                rule.type = v;
+                rule.isInstantiate = true;
+                return rule;
+            };
         });
-        return data;
-    };
 
-	/**
-	 * 必填
-	 */
-	Validate.required = function() {
-	    var rule = function(x) {
-	        return $.trim(String(x || '')).length > 0;
-	    };
-	    rule.type = 'required';
-	    rule.isInstantiate = true;
-	    return rule;
-	};
+        /**
+         * 默认参数
+         * @type {Object}
+         */
+        Validate.DEFAULTS = {
+            errorClass: 'error',
+            rules: {},
+            tipZindex: 10
+        };
 
-	/**
-	 * 扩展验证方法
-	 */
-	$.each(_rules, function(k, v) {
-	    Validate[v] = function() {
-	    	var total = arguments.length;
-	        var args = 1 <= total ? [].slice.call(arguments, 0) : [];
+        return Validate;
+    });
 
-	        var rule = function(x) {
-	        	if($.trim(String(x)).length === 0 && $.inArray(v, _notNull) === -1){
-	                return true;
-	            }
-	        	if(total === args.length){
-		            args.splice(0, 0, x);
-	        	}	
-	           	else{
-	           		args[0] = x;
-	           	} 
-	            //console.log(validator, v);
-	            return validator[v].apply(null, args);
-	        };
-	        rule.type = v;
-	        rule.isInstantiate = true;
-	        return rule;
-	    };
-	});
-
-	/**
-     * 默认参数
-     * @type {Object}
-     */
-    Validate.DEFAULTS = {
-        errorClass: 'error',
-        rules: {},
-        tipZindex: 10
-    };
-
-    return Validate;
-});
 ;
 define("catke", ["catke/classExt", "catke/highlight", "catke/http", "catke/loading", "catke/placeholder", "catke/popTips", "catke/task", "catke/toolTips", "catke/util", "catke/validate"], function(_classExt, _highlight, _http, _loading, _placeholder, _popTips, _task, _toolTips, _util, _validate){
     return {

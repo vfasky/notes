@@ -1,4 +1,28 @@
 /**
+ * 
+ * @date 2015-01-17 22:46:35
+ * @author vfasky <vfasky@gmail.com>
+ */
+
+define('note/api', ['jquery', 'catke'], function($, catke){
+    "use strict";
+    
+    var http = catke.http;
+    var apiUri = '/api/v1/';
+
+    var exports = {
+        getBooks: function(page, pageSize){
+            return http.get(apiUri + 'book', {
+                page: page || 1,
+                pageSize: pageSize || 10
+            });
+        }
+    };
+
+    return exports;
+});
+
+/**
  * web App 框架
  * @module note/app
  * @author vfasky <vfasky@gmail.com>
@@ -130,13 +154,15 @@ define('note/app', ['jquery', 'note/route', 'catke'],
 
             var route = new Route();
 
+            var addPath = function(path){
+                var info = self._route[path];
+                route.map(path, info[0], function(params) {
+                    self.callView(info[1], params || {});
+                });
+            };
+
             for (var path in self._route) {
-                (function(path) {
-                    var info = self._route[path];
-                    route.map(path, info[0], function(params) {
-                        self.callView(info[1], params || {});
-                    });
-                })(path);
+                addPath(path);
             }
             route.init();
         };
@@ -148,35 +174,49 @@ define('note/app', ['jquery', 'note/route', 'catke'],
  * doc
  * @module note/book
  * @author vfasky <vfasky@gmail.com>
- */	
-define('note/book', ['note/view'], function(View){
-	"use strict";
-	return View.extend({
-		initialize: function($el, app) {
+ */ 
+define('note/book', ['note/view', 'note/api'], function(View, api){
+    "use strict";
+    return View.extend({
+        initialize: function($el, app) {
             this.superclass.initialize.call(this, $el, app);
         },
-		run: function(context){
-			this.superclass.run.call(this, context);
-		}
-	});
+        run: function(context){
+            this.superclass.run.call(this, context);
+
+            this.when(
+                this.initAnt('note/book.html', {
+                    data:{
+                        books: []
+                    }
+                }),
+                api.getBooks()
+            ).done(function(ant, res){
+
+                ant.render({
+                    books: res.books
+                });
+            });
+        }
+    });
 });
+
 /**
  * app 入口
  * @module note/main
  * @author vfasky <vfasky@gmail.com>
- */	
-define('note/main', ['note/app', 'jquery'], 
-	function(App, $){
-		"use strict";
-		return function($el){
-			var app = new App($el, {
-				Template: null
-			});
+ */
+define('note/main', ['note/app'],
+    function(App) {
+        "use strict";
+        return function($el) {
+            var app = new App($el);
 
-			app.route('/', 'note/book')
-			   .run();	
-		};
-	});
+            app.route('/', 'note/book')
+               .run();
+        };
+    });
+
 /**
  * router
  * @module cepin/router
@@ -189,32 +229,34 @@ define('note/route', ['jquery'], function($) {
      * 事件处理
      * @type {Object}
      */
-    var eventHelper = {
-        addEventListener: function(element, type, handle) {
-            if (element.addEventListener) {
-                element.addEventListener(type, handle, false);
-            } else if (element.attachEvent) {
-                element.attachEvent("on" + type, handle);
-            } else {
-                element["on" + type] = handle;
-            }
-        },
-        removeEventListener: function(element, type, handle) {
-            if (element.removeEventListener) {
-                element.removeEventListener(type, handle, false);
-            } else if (element.detachEvent) {
-                element.detachEvent("on" + type, handle);
-            } else {
-                element["on" + type] = null;
-            }
-        },
-        proxy: function(fn, thisObject) {
-            var proxy = function() {
-                return fn.apply(thisObject || this, arguments);
-            };
-            return proxy;
-        }
-    };
+    /*
+     * var eventHelper = {
+     *     addEventListener: function(element, type, handle) {
+     *         if (element.addEventListener) {
+     *             element.addEventListener(type, handle, false);
+     *         } else if (element.attachEvent) {
+     *             element.attachEvent("on" + type, handle);
+     *         } else {
+     *             element["on" + type] = handle;
+     *         }
+     *     },
+     *     removeEventListener: function(element, type, handle) {
+     *         if (element.removeEventListener) {
+     *             element.removeEventListener(type, handle, false);
+     *         } else if (element.detachEvent) {
+     *             element.detachEvent("on" + type, handle);
+     *         } else {
+     *             element["on" + type] = null;
+     *         }
+     *     },
+     *     proxy: function(fn, thisObject) {
+     *         var proxy = function() {
+     *             return fn.apply(thisObject || this, arguments);
+     *         };
+     *         return proxy;
+     *     }
+     * };
+     */
 
     /**
      * 路由
@@ -229,7 +271,10 @@ define('note/route', ['jquery'], function($) {
      */
     Router.prototype.init = function() {
         var self = this;
-        eventHelper.addEventListener(window, 'hashchange', eventHelper.proxy(self.listener, this));
+        $(window).on('hashchange', function(){
+            self.listener.apply(self, arguments);
+        });
+        //eventHelper.addEventListener(window, 'hashchange', eventHelper.proxy(self.listener, this));
         this.listener();
     };
 
@@ -370,26 +415,42 @@ define('note/route', ['jquery'], function($) {
 
 /**
  * 模板引擎
- * @module site/template
+ * @module note/template
  * @author vfasky <vfasky@gmail.com>
  */
-define('site/template', ['ant'], function(Ant) {
+define('note/template', ['ant', 'jquery'], function(Ant, $) {
     "use strict";
 
-    var filters = {};
+    var template;
+    template = function($el, options) {
+        options = $.extend({
+            filters: template.filters
+        }, options || {});
+        return new Ant($el, options);
+    };
 
-    filters.String = String;
-    filters.Number = Number;
+    template.filters = {
+        String: String,
+        Number: Number
+    };
 
-    return Ant.extend({
-        defaults: {
-            filters: filters
+    template.load = function(uri){
+        var dtd = $.Deferred();
+        var data = uri.split('/');
+        if(data.length !== 2 || data[1].indexOf('.html') === -1){
+            dtd.reject('tpl uri error : ' + uri);
         }
-    }, {
-        load: function(uri) {
-            console.log(uri);
+        else{
+            require(['tpl/' + data[0]], function(tpls){
+                dtd.resolve(tpls[data[1]]);
+            });
         }
-    });
+        
+        return dtd.promise();
+
+    };
+
+    return template;
 });
 
 /**
@@ -397,8 +458,8 @@ define('site/template', ['ant'], function(Ant) {
  * @module note/view
  * @author vfasky <vfasky@gmail.com>
  */
-define('note/view', ['jquery', 'catke'],
-    function($, catke) {
+define('note/view', ['jquery', 'catke', 'note/template'],
+    function($, catke, template) {
         "use strict";
         var http = catke.http;
         var classExt = catke.classExt;
@@ -408,10 +469,7 @@ define('note/view', ['jquery', 'catke'],
             this.app = app;
 
             //模板引擎绑定
-            if (app.config.Template) {
-                this.Template = app.config.Template;
-            }
-
+            this.template = template;
             //封装一个 promise 规范的http helper
             this.http = http;
         };
@@ -429,6 +487,24 @@ define('note/view', ['jquery', 'catke'],
             this.$el.remove();
         };
 
+        View.prototype.initAnt = function(tplUrl, initArgs){
+            var dtd = $.Deferred();
+            var self = this;
+           
+            if(this.ant){
+                dtd.resolve(this.ant);
+            }
+            else{
+                this.template.load(tplUrl).done(function(html){
+                    self.$el.html(html);
+                    self.ant = self.template(self.$el, initArgs || {});
+                    dtd.resolve(self.ant);
+                });
+            }
+            
+            return dtd.promise();
+        };
+
         View.extend = function(definition) {
             return classExt.extend(View, definition);
         };
@@ -437,8 +513,9 @@ define('note/view', ['jquery', 'catke'],
     });
 
 ;
-define("note", ["note/app", "note/book", "note/main", "note/route", "note/template", "note/view"], function(_app, _book, _main, _route, _template, _view){
+define("note", ["note/api", "note/app", "note/book", "note/main", "note/route", "note/template", "note/view"], function(_api, _app, _book, _main, _route, _template, _view){
     return {
+        "Api" : _api,
         "App" : _app,
         "Book" : _book,
         "main" : _main,

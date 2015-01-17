@@ -72,7 +72,7 @@ var check = function(value, rules) {
     if (false === _.isArray(rules)) {
         return [getInstantiate(rules)(value)];
     }
-    if (2 === rules.length &&  _.isString(rules[1])) {
+    if (2 === rules.length && _.isString(rules[1])) {
         return [getInstantiate(rules[0])(value), rules[1]];
     }
     var res = [true];
@@ -109,20 +109,20 @@ var check = function(value, rules) {
  *         validate.isEmail
  *     ]
  * }), function *(next){
- * 	   if(this.validateError){
- * 	       return next(this.validateError);
- * 	   }
+ *     if(this.validateError){
+ *         return next(this.validateError);
+ *     }
  *     this.body = this.request.body.email;
  * });
  */
 module.exports = exports = function(rules) {
-    return function *(next) {
+    return function*(next) {
         var self = this;
         var keys = Object.keys(rules);
 
         var body = this.request.body || {};
 
-        if(this.method.toLocaleUpperCase() === 'GET'){
+        if (this.method.toLocaleUpperCase() === 'GET') {
             body = this.query;
         }
 
@@ -171,14 +171,13 @@ _.each(_rules, function(v) {
         var args = 1 <= total ? [].slice.call(arguments, 0) : [];
 
         var rule = function(x) {
-            if(String(x).trim().length === 0 && _notNull.indexOf(v) === -1){
+            if (String(x).trim().length === 0 && _notNull.indexOf(v) === -1) {
                 return true;
             }
 
-            if(total === args.length){
+            if (total === args.length) {
                 args.splice(0, 0, x);
-            }   
-            else{
+            } else {
                 args[0] = x;
             }
             return validator[v].apply(null, args);

@@ -1,11 +1,11 @@
 {
-	"function": [
-		"catke/util",
-		"catke/placeholder",
-		"catke/http",
-		"catke/popTips",
-		"catke/highlight",
-		"catke/classExt",
-		"note/main"
-	]
+    "function": [
+        "catke/util",
+        "catke/placeholder",
+        "catke/http",
+        "catke/popTips",
+        "catke/highlight",
+        "catke/classExt",
+        "note/main"
+    ]
 }

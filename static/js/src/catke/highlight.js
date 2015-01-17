@@ -40,7 +40,7 @@ define('catke/highlight', ['jquery', 'highlight'], function($, hljs) {
             }
         }
         else{
-        	compiled = hljs.highlightAuto(str).value;
+            compiled = hljs.highlightAuto(str).value;
         }
 
         var lines = compiled.split('\n'),
@@ -49,7 +49,7 @@ define('catke/highlight', ['jquery', 'highlight'], function($, hljs) {
             firstLine = 1;
 
         if(!lines[lines.length - 1]){
-        	lines.pop();
+            lines.pop();
         }
 
         $.each(lines, function(i, item) {

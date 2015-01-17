@@ -29,7 +29,7 @@ app.proxy = true;
 /**
  * 静态文件
  */
-if(null === config.staticHost){
+if (null === config.staticHost) {
     app.use(require('koa-static')(path.join(__dirname, 'static')));
 }
 
@@ -55,7 +55,7 @@ app.use(bodyParser());
 /**
  * 错误处理
  */
-app.use(function *(next) {
+app.use(function*(next) {
     try {
         yield next;
     } catch (err) {
@@ -93,7 +93,7 @@ app.use(require('./app/route/api/v1/note').middleware());
  * 错误记录
  */
 app.on('error', function(err, ctx) {
-    //TODO log	
+    //TODO log  
     if (err.status === 500) {
         console.log(err, ctx);
     }
@@ -104,7 +104,7 @@ if (!module.parent) {
     /**
      * 404
      */
-    app.use(function *() {
+    app.use(function*() {
         this.status = 404;
 
         var t = this.accepts('json', 'html');
@@ -116,7 +116,7 @@ if (!module.parent) {
             yield this.render('404.html');
         }
     });
-    
+
     app.listen(port);
     console.log('note web app listen: ' + port);
 }

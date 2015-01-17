@@ -3,7 +3,7 @@
 var gulp = require('gulp');
 var less = require('gulp-less');
 var watch = require('gulp-watch');
-var rm = require('gulp-rm');
+//var rm = require('gulp-rm');
 
 var path = require('path');
 var through2 = require('through2');
@@ -105,27 +105,32 @@ var clearJs = function(jsPath) {
 };
 
 //监听模板
-var watchTpl = function() {
-    return through2.obj(function(file, enc, callback) {
-        var paths = file.path.split(path.sep);
-        paths.pop();
-        var pack = paths[paths.length - 1];
-        buildTpl(paths.join(path.sep), pack);
-
-        return callback(null, file);
-    });
-};
+/*
+ * var watchTpl = function() {
+ *     return through2.obj(function(file, enc, callback) {
+ *         var paths = file.path.split(path.sep);
+ *         paths.pop();
+ *         var pack = paths[paths.length - 1];
+ *         buildTpl(paths.join(path.sep), pack);
+ * 
+ *         return callback(null, file);
+ *     });
+ * };
+ */
 
 //装html封装成amd
 var buildTpl = function(tplPath, pack) {
     var tplSoure = {};
     var outPath = path.join(staticRoot, 'js/tpl');
-    gulp.src(path.join(outPath, pack + '.' + '*.js'), {
-            read: false
-        })
-        .pipe(rm({
-            async: false
-        }));
+    /*
+     * 
+     * gulp.src(path.join(outPath, pack + '.' + '*.js'), {
+     *         read: false
+     *     })
+     *     .pipe(rm({
+     *         async: false
+     *     }));
+     */
 
     if (!buildRequireConfig.config) {
         var configPath = path.join(__dirname, 'requirejs.config.json');
@@ -169,13 +174,15 @@ var buildJs = function(pack) {
     var config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
 
     return through2.obj(function(file, enc, callback) {
-        var outPath = path.join(staticRoot, 'js/dist');
-        gulp.src(path.join(outPath, pack + '.' + '*.all.js'), {
-                read: false
-            })
-            .pipe(rm({
-                async: false
-            }));
+        /*
+         * var outPath = path.join(staticRoot, 'js/dist');
+         * gulp.src(path.join(outPath, pack + '.' + '*.all.js'), {
+         *         read: false
+         *     })
+         *     .pipe(rm({
+         *         async: false
+         *     }));
+         */
 
             
         var soure = file.contents.toString('utf8');
@@ -223,7 +230,7 @@ var buildJs = function(pack) {
 };
 
 gulp.task('script', function() {
-    //clearJs(path.join(staticRoot, 'js/dist'));
+    clearJs(path.join(staticRoot, 'js/dist'));
 
     var root = path.join(staticRoot, 'js/src');
 
@@ -267,12 +274,8 @@ gulp.task('less', function() {
 });
 
 gulp.task('tpl', function() {
-    //clearJs(path.join(staticRoot, 'js/tpl'));
+    clearJs(path.join(staticRoot, 'js/tpl'));
     var tplRoot = path.join(staticRoot, 'tpl');
-
-    var paths = [
-        path.join(staticRoot, 'tpl/**/*.html'),
-    ];
 
     fs.readdirSync(tplRoot).forEach(function(dir) {
         if (dir.indexOf('.') === 0) {
@@ -285,14 +288,17 @@ gulp.task('tpl', function() {
         }
     });
 
-    watch(paths).pipe(watchTpl());
+    //watch(paths).pipe(watchTpl());
 });
 
 gulp.task('watch', function(){
     watch(path.join(staticRoot, 'js/src/**/*.js'), function(){
         gulp.start('script');
     });
-
+    
+    watch(path.join(staticRoot, 'tpl/**/*.html'), function(){
+        gulp.start('tpl');
+    });
 });
 
 gulp.task('default', ['less', 'script', 'tpl', 'watch']);

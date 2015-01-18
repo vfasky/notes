@@ -171,7 +171,8 @@ _.each(_rules, function(v) {
         var args = 1 <= total ? [].slice.call(arguments, 0) : [];
 
         var rule = function(x) {
-            if (String(x).trim().length === 0 && _notNull.indexOf(v) === -1) {
+            if (
+                (String(x).trim().length === 0 || x === undefined) && _notNull.indexOf(v) === -1) {
                 return true;
             }
 

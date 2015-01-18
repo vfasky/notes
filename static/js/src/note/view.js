@@ -3,8 +3,8 @@
  * @module note/view
  * @author vfasky <vfasky@gmail.com>
  */
-define('note/view', ['jquery', 'catke', 'note/template'],
-    function($, catke, template) {
+define('note/view', ['jquery', 'catke', 'note/template', 'validator'],
+    function($, catke, template, validator) {
         "use strict";
         var http = catke.http;
         var classExt = catke.classExt;
@@ -17,6 +17,8 @@ define('note/view', ['jquery', 'catke', 'note/template'],
             this.template = template;
             //封装一个 promise 规范的http helper
             this.http = http;
+
+            this.validator = validator;
         };
 
 
@@ -48,6 +50,18 @@ define('note/view', ['jquery', 'catke', 'note/template'],
             }
             
             return dtd.promise();
+        };
+
+        View.prototype.error = function(err){
+            catke.popTips.error(err || '发生未知错误', function(){
+                if(window.history.length === 0){
+                    window.location.href = '#/';
+                }
+                else{
+                    window.history.back();
+                }
+            }, 3000);
+
         };
 
         View.extend = function(definition) {

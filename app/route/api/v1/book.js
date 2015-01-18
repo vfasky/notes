@@ -13,20 +13,35 @@ var router = new Router();
 // var _ = require('lodash');
 
 /**
- * 取笔记本列表
+ * 取笔记本
  */
-router.get('/api/v1/book', acl.allow('user'), function*() {
+router.get('/api/v1/book', acl.allow('user'), validate({
+    id: validate.isMongoId,
+}), function*() {
     var user = this.session.user;
+    var data = this.query;
+    if (!data.id) {
+        var books =
+            yield model.Book.find({
+                _user: user._id
+            }).exec();
 
-    var books =
-        yield model.Book.find({
-            _user: user._id
-        }).exec();
+        this.body = {
+            state: true,
+            books: books
+        };
+    } else {
+        var book =
+            yield model.Book.findOne({
+                _id: data.id,
+                _user: user._id
+            }).exec();
 
-    this.body = {
-        state: true,
-        books: books
-    };
+        this.body = {
+            state: true,
+            book: book
+        };
+    }
 });
 
 /**

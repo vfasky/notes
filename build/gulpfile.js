@@ -4,7 +4,7 @@ var gulp = require('gulp');
 var less = require('gulp-less');
 var watch = require('gulp-watch');
 //var rm = require('gulp-rm');
-
+var _ = require('lodash');
 var path = require('path');
 var through2 = require('through2');
 var crypto = require('crypto');
@@ -138,7 +138,7 @@ var buildTpl = function(tplPath, pack) {
     }
     var config = buildRequireConfig.config;
 
-    config.paths = JSON.parse(fs.readFileSync(mapFile, 'utf8'));
+    config.paths = _.extend(JSON.parse(fs.readFileSync(mapFile, 'utf8')), config.paths);
 
     fs.readdirSync(tplPath).forEach(function(tpl) {
         if (tpl.indexOf('.') === 0 || tpl.indexOf('.html') === -1) {
@@ -264,7 +264,7 @@ gulp.task('less', function() {
     ];
 
     gulp.src(paths)
-        .pipe(watch(paths))
+        //.pipe(watch(paths))
         .pipe(less({
             compress: true,
         }))
@@ -298,6 +298,10 @@ gulp.task('watch', function(){
     
     watch(path.join(staticRoot, 'tpl/**/*.html'), function(){
         gulp.start('tpl');
+    });
+
+    watch(path.join(staticRoot, 'less/*.less'), function(){
+        gulp.start('less');
     });
 });
 

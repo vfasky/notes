@@ -1,21 +1,23 @@
 /**
- * 
+ *
  * @date 2015-01-17 22:46:35
  * @author vfasky <vfasky@gmail.com>
  */
 
-define('note/api', ['jquery', 'catke'], function($, catke){
+define('note/api', ['jquery', 'catke'], function($, catke) {
     "use strict";
-    
+
     var http = catke.http;
     var apiUri = '/api/v1/';
 
     var exports = {
-        getBooks: function(page, pageSize){
+        getBook: function(id) {
             return http.get(apiUri + 'book', {
-                page: page || 1,
-                pageSize: pageSize || 10
+                id: id || ''
             });
+        },
+        getNote: function(data){
+            return http.get(apiUri + 'note', data || {});
         }
     };
 
@@ -185,12 +187,8 @@ define('note/book', ['note/view', 'note/api'], function(View, api){
             this.superclass.run.call(this, context);
 
             this.when(
-                this.initAnt('note/book.html', {
-                    data:{
-                        books: []
-                    }
-                }),
-                api.getBooks()
+                this.initAnt('note/book.html'),
+                api.getBook()
             ).done(function(ant, res){
 
                 ant.render({
@@ -200,6 +198,46 @@ define('note/book', ['note/view', 'note/api'], function(View, api){
         }
     });
 });
+
+/**
+ * 查看笔记本详情
+ * @date 2015-01-18 10:18:02
+ * @author vfasky <vfasky@gmail.com>
+ */
+
+define('note/bookView', ['note/view', 'note/api', 'jquery', 'catke'],
+    function(View, api, $, catke) {
+        "use strict";
+        return View.extend({
+            initialize: function($el, app) {
+                this.superclass.initialize.call(this, $el, app);
+            },
+            run: function(context) {
+                this.superclass.run.call(this, context);
+
+                if (false === this.validator.isMongoId(this.context.id)) {
+                    return this.error('参数异常');
+                }
+
+                this.when(
+                    this.initAnt('note/bookView.html'),
+                    api.getBook(this.context.id),
+                    api.getNote({
+                        bookId: this.context.id
+                    })
+                ).done(function(ant, bookApi, noteApi) {
+                    var book = bookApi.book;
+                    var notes = noteApi.notes; 
+                    if (null === book) {
+                        return this.error('抱歉，没找到相关笔记本');
+                    }
+                    console.log(book, notes);
+
+                });
+            }
+        });
+
+    });
 
 /**
  * app 入口
@@ -213,6 +251,7 @@ define('note/main', ['note/app'],
             var app = new App($el);
 
             app.route('/', 'note/book')
+               .route('/book', 'note/bookView')
                .run();
         };
     });
@@ -458,8 +497,8 @@ define('note/template', ['ant', 'jquery'], function(Ant, $) {
  * @module note/view
  * @author vfasky <vfasky@gmail.com>
  */
-define('note/view', ['jquery', 'catke', 'note/template'],
-    function($, catke, template) {
+define('note/view', ['jquery', 'catke', 'note/template', 'validator'],
+    function($, catke, template, validator) {
         "use strict";
         var http = catke.http;
         var classExt = catke.classExt;
@@ -472,6 +511,8 @@ define('note/view', ['jquery', 'catke', 'note/template'],
             this.template = template;
             //封装一个 promise 规范的http helper
             this.http = http;
+
+            this.validator = validator;
         };
 
 
@@ -505,6 +546,18 @@ define('note/view', ['jquery', 'catke', 'note/template'],
             return dtd.promise();
         };
 
+        View.prototype.error = function(err){
+            catke.popTips.error(err || '发生未知错误', function(){
+                if(window.history.length === 0){
+                    window.location.href = '#/';
+                }
+                else{
+                    window.history.back();
+                }
+            }, 3000);
+
+        };
+
         View.extend = function(definition) {
             return classExt.extend(View, definition);
         };
@@ -513,11 +566,12 @@ define('note/view', ['jquery', 'catke', 'note/template'],
     });
 
 ;
-define("note", ["note/api", "note/app", "note/book", "note/main", "note/route", "note/template", "note/view"], function(_api, _app, _book, _main, _route, _template, _view){
+define("note", ["note/api", "note/app", "note/book", "note/bookView", "note/main", "note/route", "note/template", "note/view"], function(_api, _app, _book, _bookView, _main, _route, _template, _view){
     return {
         "Api" : _api,
         "App" : _app,
         "Book" : _book,
+        "BookView" : _bookView,
         "main" : _main,
         "Route" : _route,
         "Template" : _template,

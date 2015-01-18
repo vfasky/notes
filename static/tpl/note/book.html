@@ -1,5 +1,11 @@
-<ul>
+<ul class="book-list">
     <li a-repeat="{{books}}">
-        {{title}}
+        <a href="#/book?id={{_id}}">
+            {{title}}
+            <span>{{total}}</span>
+        </a>
+        <!--
+          <p>• {{updateAt}}</p>
+        -->
     </li>
 </ul>

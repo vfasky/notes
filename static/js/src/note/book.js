@@ -13,12 +13,8 @@ define('note/book', ['note/view', 'note/api'], function(View, api){
             this.superclass.run.call(this, context);
 
             this.when(
-                this.initAnt('note/book.html', {
-                    data:{
-                        books: []
-                    }
-                }),
-                api.getBooks()
+                this.initAnt('note/book.html'),
+                api.getBook()
             ).done(function(ant, res){
 
                 ant.render({

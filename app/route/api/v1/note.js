@@ -18,24 +18,38 @@ var config = require('../../../../config');
  */
 router.get('/api/v1/note', acl.allow('user'), validate({
     id: validate.isMongoId,
+    bookId: validate.isMongoId,
 }), function*() {
     var user = this.session.user;
     var data = this.query;
 
-    var note =
-        yield model.Note.findOne({
-            _id: data.id,
+    if (data.id) {
+        var note =
+            yield model.Note.findOne({
+                _id: data.id,
+                _user: user._id
+            }).exec();
+
+        this.body = {
+            state: true,
+            note: note
+        };
+    } else {
+        var where = {
             _user: user._id
-        }).exec();
+        };
+        if (data.bookId) {
+            where._book = data.bookId;
+        }
 
-    if (null === note) {
-        this.throw(200, '笔记不存在');
+        var notes =
+            yield model.Note.find(where).exec();
+
+        this.body = {
+            state: true,
+            notes: notes
+        };
     }
-
-    this.body = {
-        state: true,
-        note: note
-    };
 });
 
 /**
@@ -124,7 +138,7 @@ router.put('/api/v1/note', acl.allow('user'), validate({
 
     //重建索引
     if (config.MQS.accessKeyId !== 'you accessKeyId') {
-   
+
         task.message.send(task.index, {
             msg: String(note._id)
         });

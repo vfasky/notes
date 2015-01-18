@@ -1,21 +1,23 @@
 /**
- * 
+ *
  * @date 2015-01-17 22:46:35
  * @author vfasky <vfasky@gmail.com>
  */
 
-define('note/api', ['jquery', 'catke'], function($, catke){
+define('note/api', ['jquery', 'catke'], function($, catke) {
     "use strict";
-    
+
     var http = catke.http;
     var apiUri = '/api/v1/';
 
     var exports = {
-        getBooks: function(page, pageSize){
+        getBook: function(id) {
             return http.get(apiUri + 'book', {
-                page: page || 1,
-                pageSize: pageSize || 10
+                id: id || ''
             });
+        },
+        getNote: function(data){
+            return http.get(apiUri + 'note', data || {});
         }
     };
 

@@ -10,6 +10,7 @@ define('note/main', ['note/app'],
             var app = new App($el);
 
             app.route('/', 'note/book')
+               .route('/book', 'note/bookView')
                .run();
         };
     });

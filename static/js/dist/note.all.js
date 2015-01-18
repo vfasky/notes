@@ -214,6 +214,7 @@ define('note/bookView', ['note/view', 'note/api', 'jquery', 'catke'],
             },
             run: function(context) {
                 this.superclass.run.call(this, context);
+                var self = this;
 
                 if (false === this.validator.isMongoId(this.context.id)) {
                     return this.error('参数异常');
@@ -229,7 +230,7 @@ define('note/bookView', ['note/view', 'note/api', 'jquery', 'catke'],
                     var book = bookApi.book;
                     var notes = noteApi.notes; 
                     if (null === book) {
-                        return this.error('抱歉，没找到相关笔记本');
+                        return self.error('抱歉，没找到相关笔记本');
                     }
                     console.log(book, notes);
 

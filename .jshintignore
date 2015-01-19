@@ -3,3 +3,4 @@ node_modules
 static/test
 static/js/vendor
 static/js/dist
+static/js/tpl

@@ -4,8 +4,8 @@
  * @author vfasky <vfasky@gmail.com>
  */
 
-define('note/bookView', ['note/view', 'note/api', 'jquery', 'catke'],
-    function(View, api, $, catke) {
+define('note/bookView', ['note/view', 'note/api'],
+    function(View, api) {
         "use strict";
         return View.extend({
             initialize: function($el, app) {

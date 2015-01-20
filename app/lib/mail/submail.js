@@ -19,9 +19,10 @@ module.exports = function(options) {
         }, options);
 
         request({
-            uri: 'https://api.submail.cn/mail/send',
+            uri: 'https://api.submail.cn/mail/send.json',
             method: 'POST',
             form: {
+                appid: options.appid,
                 from: options.from,
                 to: options.to,
                 subject: options.subject || options.title,
@@ -29,6 +30,8 @@ module.exports = function(options) {
                 signature: options.apiKey
             }
         }, function(err, res, body) {
+            //好神奇，成功没有返回?
+            //console.log(err, res, body);
             if (!err && res.statusCode === 200) {
                 return done(null, JSON.parse(body));
             }

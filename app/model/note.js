@@ -3,8 +3,9 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var _ = require('lodash');
-var segment = require('../lib/segment');
 var mongooseExt = require('../lib/mongooseExt');
+var nodejieba = require('nodejieba');
+
 /**
  * 笔记模型
  * @author vfasky <vfasky@gmail.com>
@@ -92,7 +93,7 @@ NoteSchema.statics.findByKeyword = function(keyword, user) {
  * 通过笔记，生成关键字
  * @type {[type]}
  */
-NoteSchema.methods.buildKeywords = function() {
+NoteSchema.methods.buildKeywords = function(done) {
     // var texts = [this.title];
 
     // var content = this.content;
@@ -104,7 +105,9 @@ NoteSchema.methods.buildKeywords = function() {
     //     }
     // });
 
-    return segment([this.title, this.content].join('\n'));
+    //return segment([this.title, this.content].join('\n'), done);
+    var text = [this.title, this.content].join('\n');
+
 };
 
 NoteSchema.methods.saveKeywords = function(keywords) {

@@ -1,17 +1,36 @@
 {% extends "_layout/base.html" %}
 
 {% block body %}
-    <div id="top-menu">
-        {% if session.user == undef %}
-        <ul class="auth">
-            <li>
-                <a href="/sign">登录</a>
-            </li>
-            <li>
-                <a href="/sign">注册</a>
-            </li>
-        </ul>
-        {% endif %}
+    <div class="ui secondary pointing menu">
+        <div class="container">
+            <a class="active item">
+                <i class="home icon"></i> Home
+            </a>
+            <a class="item">
+                <i class="mail icon"></i> Messages
+            </a>
+            <a class="item">
+                <i class="user icon"></i> Friends
+            </a>
+            <div class="right menu">
+                <div class="item">
+                    <div class="ui icon input">
+                        <input type="text" placeholder="Search...">
+                        <i class="search link icon"></i>
+                    </div>
+                </div>
+
+                {% if session.user == undef %}
+                <a class="ui item" href="/signin">登录</a>
+                <a class="ui item" href="#">注册</a>
+                {% else %}
+                <a class="ui item">
+                Logout
+                </a>
+                {% endif %}
+
+            </div>
+        </div>
     </div>
 
     <div id="main">

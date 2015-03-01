@@ -1,7 +1,19 @@
 {% extends "_layout/base.html" %}
 
 {% block body %}
-<pre>
-    {{message}}
-</pre>
+<div class="ui page grid">
+    <div class="sixteen wide column">
+        <div class="ui negative message">
+            
+            <div class="header">
+                对不起，出了点错误：
+            </div>
+
+            <pre>
+                {{message}}
+            </pre>
+
+        </div>
+    </div>
+</div>
 {% endblock %}

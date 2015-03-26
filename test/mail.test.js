@@ -5,19 +5,10 @@
  */
 "use strict";
 
+
 var mail = require('../app/lib/mail');
 
 describe('mail', function() {
-    /*
-     * it('mailgun', function(done){
-     *     mailgun({
-     *         to: 'vfasky@me.com',
-     *         title: 'note test',
-     *         html: '<h3>hello</h3>'
-     *     })(done);
-     * });
-     */
-
     it('default', function(done){
         mail({
             to: 'vfasky@me.com',
@@ -31,3 +22,4 @@ describe('mail', function() {
         });
     });
 });
+

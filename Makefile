@@ -21,6 +21,7 @@ dev-task:
 test: jshint
 	@NODE_ENV=test ./node_modules/.bin/mocha \
 	--harmony \
+	-t 5000 \
 	$(TESTS)
 
 install:

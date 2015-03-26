@@ -4,3 +4,4 @@ user.json
 .idea
 *.swp
 coverage
+start_evn.sh

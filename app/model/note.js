@@ -4,7 +4,8 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var _ = require('lodash');
 var mongooseExt = require('../lib/mongooseExt');
-var nodejieba = require('nodejieba');
+var jieba = require('../lib/jieba');
+
 
 /**
  * 笔记模型
@@ -108,6 +109,27 @@ NoteSchema.methods.buildKeywords = function(done) {
     //return segment([this.title, this.content].join('\n'), done);
     var text = [this.title, this.content].join('\n');
 
+    jieba.queryCut(text, function(err, tl){
+        if(err){
+            return done(err);
+        }
+        var keywords = {};
+
+        tl.forEach(function(v){
+            if(v.length > 1){
+                if(keywords[v]){
+                    keywords[v]++;
+                }
+                else{
+                    keywords[v] = 1;
+                }
+                return true;
+            }
+            return false;
+        });
+
+        done(null, keywords);
+    });
 };
 
 NoteSchema.methods.saveKeywords = function(keywords) {

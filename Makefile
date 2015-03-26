@@ -29,11 +29,12 @@ install:
 
 test-cov cov:
 	@npm install 
-	@NODE_ENV=test node --harmony-generators \
+	@NODE_ENV=test node --harmony \
 	node_modules/.bin/istanbul cover --preserve-comments \
 	./node_modules/.bin/_mocha \
 	-- \
 	--reporter $(MOCHA_REPORTER) \
+	-t 5000 \
 	$(TESTS) \
 	--bail
 

@@ -60,20 +60,23 @@ describe('model book note', function() {
 
     it('note build and save keywords', function(done) {
 
-        var keywords = note.buildKeywords();
-        var words = Object.keys(keywords);
+        note.buildKeywords(function(err, keywords){
+            //console.log(keywords);
+            var words = Object.keys(keywords);
 
-        assert.notEqual(0, words.length);
+            assert.notEqual(0, words.length);
 
-        note.saveKeywords(keywords)(function(err, has) {
-            if (err) {
-                return done(err);
-            }
-            assert.equal(has.length, words.length);
+            note.saveKeywords(keywords)(function(err, has) {
+                if (err) {
+                    return done(err);
+                }
+                assert.equal(has.length, words.length);
 
-            _has = has;
-            done();
+                _has = has;
+                done();
 
+
+            });
 
         });
     });

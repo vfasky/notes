@@ -1,0 +1,23 @@
+{
+    "//": "自动打包的目录",
+    "pack": "./js/pack",
+
+    "//": "less目录",
+    "less": "./style/less",
+
+    "//": "tpl目录",
+    "tpl": "./tpl",
+
+    "//": "requireJS 的配置",
+    "requireConfig": {
+        "paths": {
+            "stapes": "//dn-cdnjscn.qbox.me/ajax/libs/stapes/0.8.1/stapes.min",
+            "rivets": "//dn-cdnjscn.qbox.me/ajax/libs/rivets/0.8.1/rivets.min",
+            "jquery": "//dn-cdnjscn.qbox.me/ajax/libs/jquery/1.11.2/jquery.min",
+            "highlight": "//dn-cdnjscn.qbox.me/ajax/libs/highlight.js/8.4/highlight.min"
+        }
+    },
+
+    "//": "配置文件",
+    "configFile": "./js/config.js"
+}

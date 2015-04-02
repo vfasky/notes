@@ -1,0 +1,6 @@
+[submodule "static/js/pack/rvsui"]
+	path = static/js/pack/rvsui
+	url = git@github.com:vfasky/rvsui.git
+[submodule "fbuild"]
+	path = fbuild
+	url = git@github.com:vfasky/fbuild.git

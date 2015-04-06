@@ -1,11 +1,1 @@
-require.config({
-    "paths": {
-        "ant": "/js/vendor/ant.min",
-        "note": "/js/dist/note.8c9513.min",
-        "catke": "/js/dist/catke.47981c.min",
-        "tpl/note": "/js/tpl/note.38a1eb",
-        "jquery": "//cdnjscn.b0.upaiyun.com/libs/jquery/1.11.1/jquery.min",
-        "highlight": "//cdn.jsdelivr.net/highlight.js/8.4/highlight.min",
-        "validator": "/js/vendor/validator.min"
-    }
-});
+require.config({"paths":{"tpl/test":"./js/tpl/test","rvsui":"./js/pack/rvsui/dist/rvsui.all.min","stapes":"//dn-cdnjscn.qbox.me/ajax/libs/stapes/0.8.1/stapes.min","rivets":"//dn-cdnjscn.qbox.me/ajax/libs/rivets/0.8.1/rivets.min","jquery":"//dn-cdnjscn.qbox.me/ajax/libs/jquery/1.11.2/jquery.min","highlight":"//dn-cdnjscn.qbox.me/ajax/libs/highlight.js/8.4/highlight.min"},"urlArgs":{"tpl/test":"32cfc3","rvsui":"5f84b2"}});

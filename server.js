@@ -93,7 +93,7 @@ app.use(require('./app/route/api/v1/note').middleware());
  * 错误记录
  */
 app.on('error', function(err, ctx) {
-    //TODO log  
+    //TODO log
     if (err.status === 500) {
         console.log(err, ctx);
     }

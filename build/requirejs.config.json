@@ -1,8 +1,0 @@
-{
-    "paths": {
-        "jquery": "//cdnjscn.b0.upaiyun.com/libs/jquery/1.11.1/jquery.min",
-        "highlight": "//cdn.jsdelivr.net/highlight.js/8.4/highlight.min",
-        "validator": "/js/vendor/validator.min",
-        "ant": "/js/vendor/ant.min"
-    }
-}

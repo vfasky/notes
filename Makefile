@@ -18,7 +18,7 @@ dev-task:
 	--harmony \
 	task.js
 
-test: jshint
+test: 
 	@NODE_ENV=test ./node_modules/.bin/mocha \
 	--harmony \
 	-t 5000 \
@@ -28,7 +28,7 @@ install:
 	@npm install --registry=http://r.cnpmjs.org
 
 test-cov cov:
-	@npm install 
+	@npm install
 	@NODE_ENV=test node --harmony \
 	node_modules/.bin/istanbul cover --preserve-comments \
 	./node_modules/.bin/_mocha \

@@ -23,7 +23,15 @@ describe('template', function() {
     it('render', function(done) {
         request(app.callback())
             .get('/')
-            .expect(/<div>ok<\/div>/)
-            .expect(200, done);
+            .expect(200, function(err, res){
+                if(err){
+                    return done(err);
+                }
+                if(res.res.text.indexOf('<div>ok</div>') === -1){
+                    return done('template error');
+                }
+                done();
+
+            });
     });
 });

@@ -64,7 +64,7 @@ exports = module.exports = function(app, settings) {
     settings = _.extend(defaultSettings, settings);
 
     var template = nunjucks.configure(
-        path.join(config.rootPath, settings.templatePath),
+        settings.templatePath,
         settings
     );
 
@@ -87,7 +87,6 @@ exports = module.exports = function(app, settings) {
         };
 
         if(hash){
-            //console.log("%s is cache", uri);
             return buildFullUrl();
         }
 

@@ -97,6 +97,7 @@ app.on('error', function(err, ctx) {
     if (err.status === 500) {
         console.log(err, ctx);
     }
+    console.log(err);
 });
 
 if (!module.parent) {

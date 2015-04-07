@@ -7,6 +7,15 @@ var config = require('../../config');
 var fs = require('fs');
 var path = require('path');
 var Remarkable = require('remarkable');
+var crypto = require('crypto');
+
+var md5 = function(text) {
+    return crypto.createHash('md5').update(String(text)).digest('hex');
+};
+
+var getHash = function(text) {
+    return md5(text).substring(0, 6);
+};
 
 /**
  * markdown 设置
@@ -28,13 +37,9 @@ var defaultSettings = {
     watch: env === 'development'
 };
 
-//时间缀
-var _time = (new Date()).getTime();
 
 //文件 hash
-var _hash = JSON.parse(fs.readFileSync(
-    path.join(__dirname, '../../build/hash.json')
-), 'utf8');
+var _fileHash = {};
 
 
 /**
@@ -58,7 +63,10 @@ exports = module.exports = function(app, settings) {
 
     settings = _.extend(defaultSettings, settings);
 
-    var template = nunjucks.configure(settings.templatePath, settings);
+    var template = nunjucks.configure(
+        path.join(config.rootPath, settings.templatePath),
+        settings
+    );
 
     //渲染markdown
     template.addFilter('markdown', function(str) {
@@ -66,14 +74,34 @@ exports = module.exports = function(app, settings) {
     });
 
     //静态文件前缀
-    template.addFilter('staticUrl', function(uri) {
-        var hash = _hash[uri] || _time;
+    template.addFilter('staticUrl', function(uri, callback) {
+        var filePath = path.join(__dirname, '../../static', uri);
 
-        if (null === config.staticHost) {
-            return '/' + uri + '?' + hash;
+        var hash = _fileHash[uri];
+
+        var buildFullUrl = function(){
+            if (null === config.staticHost) {
+                return callback(null, '/' + uri + '?' + hash);
+            }
+            return callback(null, config.staticHost + uri + '?' + hash);
+        };
+
+        if(hash){
+            //console.log("%s is cache", uri);
+            return buildFullUrl();
         }
-        return config.staticHost + uri + '?' + hash;
-    });
+
+        fs.readFile(filePath, function(err, context){
+            if(err){
+                return callback(err);
+            }
+            hash = getHash(context);
+            _fileHash[uri] = hash;
+
+            return buildFullUrl();
+        });
+
+    }, true);
 
     /**
      * locals
@@ -98,7 +126,7 @@ exports = module.exports = function(app, settings) {
      */
     var render = function(view, options, self) {
         options = options || {};
-        
+
         return function(done) {
             options = _.extend(locals, options);
 

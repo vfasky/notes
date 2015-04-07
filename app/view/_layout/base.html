@@ -12,9 +12,9 @@
     <title>{% block title %}{% endblock %}</title>
     <link rel="stylesheet" href="//dn-cdnjscn.qbox.me/ajax/libs/highlight.js/8.4/styles/solarized_light.min.css">
     <link rel="stylesheet" href="//dn-cdnjscn.qbox.me/ajax/libs/semantic-ui/1.10.3/semantic.min.css">
-    <link rel="stylesheet" href="{{'css/style.css' | staticUrl}}">
+    <link rel="stylesheet" href="{{'style/css/style.css' | staticUrl}}">
     {% block css %}{% endblock %}
-     
+
 </head>
 <body class="{% block bodyClass %}{% endblock %}">
     <!--[if lt IE 9]>
@@ -26,7 +26,7 @@
     {% block body %}{% endblock %}
 
     {% block foot %}{% endblock %}
-    
+
     <script src="//cdnjscn.b0.upaiyun.com/libs/require.js/2.1.14/require.min.js"></script>
     <script src="{{'js/config.js' | staticUrl}}"></script>
     {% block js %}{% endblock %}

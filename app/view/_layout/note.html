@@ -1,49 +1,15 @@
 {% extends "_layout/base.html" %}
 
 {% block body %}
-    <div class="ui secondary pointing menu">
-        <div class="container">
-            <a class="active item">
-                <i class="home icon"></i> Home
-            </a>
-            <a class="item">
-                <i class="mail icon"></i> Messages
-            </a>
-            <a class="item">
-                <i class="user icon"></i> Friends
-            </a>
-            <div class="right menu">
-                <div class="item">
-                    <div class="ui icon input">
-                        <input type="text" placeholder="Search...">
-                        <i class="search link icon"></i>
-                    </div>
-                </div>
-
-                {% if session.user == undef %}
-                <a class="ui item" href="/signin">登录</a>
-                <a class="ui item" href="#">注册</a>
-                {% else %}
-                <a class="ui item">
-                Logout
-                </a>
-                {% endif %}
-
-            </div>
+<div class="ui inverted teal vertical segment">
+    <div class="ui page grid">
+        <div class="column">
+            <h2 class="ui inverted header">Full Width Background</h2>
+            <p>First section of content</p>
         </div>
     </div>
-
-    <div id="main">
-        {% block brand %}
-        <div id="brand">
-            <a href="/">
-                <h1>笔 记</h1>
-            </a>
-        </div>
-        {% endblock %}
-        
-
-        {% block content %}
-        {% endblock %}
-    </div>
+</div>
+<div class="ui grid">
+    {% block content %} {% endblock %}
+</div>
 {% endblock %}

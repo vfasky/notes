@@ -1,0 +1,1 @@
+define("tpl/test",function(){"use strict";return{"index.html":"vfask<h3>test</h3>\nok??s   tss  ss ssss\ns sssfsdfssd dsfs dfs fsdfsdf\n\nsdf \n \n\nsfsfsdfsss\n"}});

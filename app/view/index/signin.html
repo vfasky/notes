@@ -1,4 +1,4 @@
-{% extends "_layout/note.html" %} 
+{% extends "_layout/note.html" %}
 
 {% block content %}
 
@@ -18,34 +18,6 @@
 
 {% block js %}
     <script>
-        require(['jquery', 'catke'], function($, catke){
-            "use strict";
-            var Validate = catke.Validate;
-            var $form = $('form');
-
-            catke.placeholder($form.find('[placeholder]'));
-
-            var form = new Validate($form, {
-                rules: {
-                    email: [
-                        Validate.required, 
-                        Validate.isEmail
-                    ],
-                    password: [Validate.isLength(6, 32), '容许 6 至 32 个字符']
-                }
-            });
-
-            $form.on('submit', function(){
-                if(form.valid()){
-                    catke.http.put('/api/v1/user', form.getData())
-                              .done(function(){
-                                catke.popTips.success('登录成功，正在为您跳转 ...', function(){
-                                    window.location.href = '/app';
-                                }, 1000);
-                              });
-                }
-                return false;
-            });
-        });
+        
     </script>
 {% endblock %}

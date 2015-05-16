@@ -6,7 +6,7 @@ TESTS = test/*.test.js \
 MOCHA_REPORTER = spec
 
 dev:
-	@./node_modules/.bin/node-dev \
+	@NODE_ENV=development ./node_modules/.bin/node-dev \
 	--harmony \
 	server.js
 
@@ -18,7 +18,7 @@ dev-task:
 	--harmony \
 	task.js
 
-test: 
+test:
 	@NODE_ENV=test ./node_modules/.bin/mocha \
 	--harmony \
 	-t 5000 \

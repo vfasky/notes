@@ -1,1 +1,0 @@
-define("tpl/test",function(){"use strict";return{"index.html":"<h3>test</h3>\nok??s   ts\ns sssfsdfssd\n\nsfsfsdfsss\n"}});
